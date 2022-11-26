@@ -34,4 +34,9 @@ def create():
 
     return render_template('create.html')
 
+@app.route('/upload')
+def upload():
+    return render_template('upload.html')
+
+
 
