@@ -1,12 +1,16 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
 
+# ...
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your secret key'
+
 
 messages = [{'title': 'Message One',
              'content': 'Message One Content'},
             {'title': 'Message Two',
              'content': 'Message Two Content'}
             ]
+# ...
 
 @app.route('/')
 def index():
@@ -30,15 +34,4 @@ def create():
 
     return render_template('create.html')
 
-# ...
-app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your secret key'
-
-
-messages = [{'title': 'Message One',
-             'content': 'Message One Content'},
-            {'title': 'Message Two',
-             'content': 'Message Two Content'}
-            ]
-# ...
 
