@@ -1,4 +1,4 @@
 flask
 gunicorn
-cgi
-os
+cgi-tool
+os-sys
