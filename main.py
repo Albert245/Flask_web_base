@@ -49,15 +49,7 @@ def upload():
         message = 'The file "' + fn + '" was uploaded successfully'
     else:
         message = 'No file was uploaded'
-        print("""
-        Content-Type: text/html
-
-        <html>
-        <body>
-        <p>%s</p>
-        </body>
-        </html>
-        """ )% (message,)
+    flash(message)
     return render_template('upload.html')
 
 
