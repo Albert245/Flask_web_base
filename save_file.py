@@ -10,9 +10,9 @@ if fileitem.filename:
    # directory traversal attacks
    fn = os.path.basename(fileitem.filename)
    open('/tmp/' + fn, 'wb').write(fileitem.file.read())
-   message = 'The file "' + fn + '" was uploaded successfully'
+   message1 = 'The file "' + fn + '" was uploaded successfully'
 else:
-   message = 'No file was uploaded'
+   message1 = 'No file was uploaded'
 print("""\
 Content-Type: text/html
 
@@ -21,4 +21,4 @@ Content-Type: text/html
    <p>{}</p>
 </body>
 </html>
-""".format(message))
+""".format(message1))
