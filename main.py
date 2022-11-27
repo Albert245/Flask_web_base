@@ -8,7 +8,5 @@ def index():
 @app.route('/upload', methods=['POST'])
 def upload():
     file = request.files['file']
-    file_name = file.filename
-    destination = '/uploads'.join([file_name])
-    file.save(destination)
+    file.save(f'uploads/{file.filename}')
     return redirect('/')
