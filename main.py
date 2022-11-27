@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
 import os
+import numpy as np
 
 # ...
 app = Flask(__name__)
@@ -66,4 +67,11 @@ def extractData(start,stop, raw_data):
         data.remove("")
     return data
 
+def String2hex(str_line,n):
+    return [str_line[i:i+n] for i in range(0,len(str_line),n)]
 
+def list2hex(list):
+    list_out = []
+    for i in range(0,len(list)):
+        list_out.append(String2hex(list[i],2))
+    return list_out
