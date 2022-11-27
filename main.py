@@ -36,8 +36,9 @@ def create():
 
 @app.route('/upload', methods = ('GET','POST'))
 def upload():
-    file = request.files['uploadfile']
-    file.save(f'uploads/{file.filename}')
+    if request.method == 'POST':
+        file = request.files['uploadfile']
+        file.save(f'uploads/{file.filename}')
     return render_template('upload.html')
 
 
