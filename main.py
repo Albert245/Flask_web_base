@@ -56,11 +56,11 @@ def upload():
             return 'Not allowed'
     return render_template('upload.html')
 
-def extractData(start, stop, raw_data[]):
+def extractData(start,stop, raw_data):
     data = []
     for i in range(len(raw_data)):
-        for j in range(start,stop):
-            data[i] = raw_data[i][j]
+        a = raw_data[i]
+        data.append(a[start:stop])
     return data
 
 
