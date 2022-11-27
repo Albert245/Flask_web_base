@@ -60,7 +60,7 @@ def extractData(start,stop, raw_data):
     data = []
     for i in range(len(raw_data)):
         a = raw_data[i]
-        if len(a)>=12:
+        if len(a)>12:
             data.append(a[start:stop])
     return data
 
