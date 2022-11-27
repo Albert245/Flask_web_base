@@ -50,7 +50,7 @@ def upload():
                 for line in file.readlines():
                     Block.append(str(line.rstrip()))
                     
-                page = extractData(10:-3)
+                page = extractData(10,-3,Block)
                 return page[0]
         except:
             return 'Not allowed'
