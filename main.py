@@ -18,7 +18,7 @@ def index():
 
 # ...
 
-@app.route('/create', methods=('GET', 'POST'))
+@app.route('/create/', methods=('GET', 'POST'))
 def create():
     if request.method == 'POST':
         title = request.form['title']
@@ -33,16 +33,14 @@ def create():
             return redirect(url_for('index'))
 
     return render_template('create.html')
-@app.uploadpage('/uploadpage')
-def uploadpage():
-    return render_template('upload.html')
-@app.route('/upload', methods = ['POST'])
+
+@app.route('/upload', methods = ('GET','POST'))
 def upload():
     if request.method == 'POST':
         file = request.files['uploadfile']
         file.save(f'uploads/{file.filename}')
-        
-    return redirect('/uploadpage')
+        return redirect('/upload')
+    return render_template('upload.html')
 
 
 
