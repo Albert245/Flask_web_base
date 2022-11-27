@@ -34,8 +34,10 @@ def create():
 
     return render_template('create.html')
 
-@app.route('/upload')
+@app.route('/upload', methods =['POST'])
 def upload():
+    file = request.files['uploadfile']
+    file.save(f'uploads/{file.filename}')
     return render_template('upload.html')
 
 
