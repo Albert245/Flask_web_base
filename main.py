@@ -3,7 +3,9 @@ import os
 
 # ...
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 1024*32
 app.config['SECRET_KEY'] = 'your secret key'
+app.config['ALLOWED_EXTENSIONS'] = {'.hex'}
 
 
 messages = [{'title': 'Message One',
@@ -38,9 +40,12 @@ def create():
 @app.route('/upload', methods = ('GET','POST'))
 def upload():
     if request.method == 'POST':
-        file = request.files['uploadfile']
-        if file:
-            return redirect('/upload')
+        try:
+            file = request.files['uploadfile']
+            if file:
+                return redirect('/upload')
+        except:
+            return 'Not allowed'
     return render_template('upload.html')
 
 
