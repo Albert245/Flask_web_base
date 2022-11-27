@@ -43,7 +43,7 @@ def upload():
         try:
             file = request.files['uploadfile']
             extension = os.path.splitext(file.filename)[1]
-            Block = ''
+            Block = []
             if file:
                 if extension not in app.config['ALLOWED_EXTENSIONS']:
                     return 'Not a hex file'
