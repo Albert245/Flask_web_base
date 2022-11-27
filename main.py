@@ -48,12 +48,19 @@ def upload():
                 if extension not in app.config['ALLOWED_EXTENSIONS']:
                     return 'Not a hex file'
                 for line in file.readlines():
-                    Block.append(line.rstrip())
-                    a = str(Block[0])
-                return a[3:-2]
+                    Block.append(str(line.rstrip()))
+                    
+                page = extractData(10:-3)
+                return page[0]
         except:
             return 'Not allowed'
     return render_template('upload.html')
 
+def extractData(start, stop, raw_data[]):
+    data = []
+    for i in range(len(raw_data)):
+        for j in range(start,stop):
+            data[i] = raw_data[i][j]
+    return data
 
 
