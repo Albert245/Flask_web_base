@@ -1,5 +1,4 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
-import os,cgi
 
 # ...
 app = Flask(__name__)
@@ -37,19 +36,6 @@ def create():
 
 @app.route('/upload')
 def upload():
-    form = cgi.FieldStorage()
-    # Get filename here.
-    fileitem = form['filename']
-    # Test if the file was uploaded
-    if fileitem.filename:
-    # strip leading path from file name to avoid
-    # directory traversal attacks
-        fn = os.path.basename(fileitem.filename.replace("\\", "/"))
-        open('/tmp/' + fn, 'wb').write(fileitem.file.read())
-        message = 'The file "' + fn + '" was uploaded successfully'
-    else:
-        message = 'No file was uploaded'
-    flash(message)
     return render_template('upload.html')
 
 
