@@ -49,7 +49,7 @@ def upload():
                     return 'Not a hex file'
                 for line in file.readlines():
                     Block.append(line.rstrip())
-                return Block
+                return str(Block[0])
         except:
             return 'Not allowed'
     return render_template('upload.html')
