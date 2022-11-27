@@ -49,7 +49,7 @@ def upload():
                     return 'Not a hex file'
                 for line in file.readlines():
                     Block.append(line.rstrip())
-                    print(Block)
+                    print(Block[0])
                 return redirect('/upload')
         except:
             return 'Not allowed'
