@@ -65,13 +65,14 @@ def extractData(start,stop, raw_data):
             data.append(a[start:stop])
     while("" in data):
         data.remove("")
-    return data
+    listdata = list2D(data)
+    return listdata
 
-def String2hex(str_line,n):
+def String_split_nth(str_line,n):
     return [str_line[i:i+n] for i in range(0,len(str_line),n)]
 
-def list2hex(list):
+def list2D(list):
     list_out = []
     for i in range(0,len(list)):
-        list_out.append(String2hex(list[i],2))
+        list_out.append(String_split_nth(list[i],2))
     return list_out
