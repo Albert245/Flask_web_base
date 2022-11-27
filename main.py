@@ -51,7 +51,7 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = extractData(11,-3,Block)
-                return page[0]
+                return page
         except:
             return 'Not allowed'
     return render_template('upload.html')
@@ -60,7 +60,8 @@ def extractData(start,stop, raw_data):
     data = []
     for i in range(len(raw_data)):
         a = raw_data[i]
-        data.append(a[start:stop])
+        if len(a)>=12:
+            data.append(a[start:stop])
     return data
 
 
