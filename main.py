@@ -62,6 +62,8 @@ def extractData(start,stop, raw_data):
         a = raw_data[i]
         if len(a)>12:
             data.append(a[start:stop])
+    while("" in data):
+        data.remove("")
     return data
 
 
