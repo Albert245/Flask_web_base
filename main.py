@@ -51,7 +51,7 @@ def upload():
                 for line in file.readlines():
                     Block.append(str(line.rstrip()))
                     
-                page = extractData(11,-3,Block)
+                page = Datafile2hex(Block)
                 return page
         except:
             return 'Not allowed'
@@ -65,14 +65,21 @@ def extractData(start,stop, raw_data):
             data.append(a[start:stop])
     while("" in data):
         data.remove("")
-    listdata = list2D(data)
-    return listdata
+    return data
 
 def String_split_nth(str_line,n):
-    return [str_line[i:i+n] for i in range(0,len(str_line),n)]
+    list_splited = [str_line[i:i+n] for i in range(0,len(str_line),n)]
+    for i in range(len(list_splited)):
+        list_splited[i] = hex(int(list_splited[i],16))
+    return list_splited
 
-def list2D(list):
+def list2Dhex(list):
     list_out = []
     for i in range(0,len(list)):
         list_out.append(String_split_nth(list[i],2))
     return list_out
+
+#  turn Datafile into 2D-list of hex
+def Datafile2hex(Data_list): 
+    Data_extracted = list2Dhex(extractData(11,-3,Data_list))
+    return Data_extracted
