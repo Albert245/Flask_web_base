@@ -39,6 +39,7 @@ def upload():
     if request.method == 'POST':
         file = request.files['uploadfile']
         file.save(f'uploads/{file.filename}')
+        return redirect('/upload')
     return render_template('upload.html')
 
 
