@@ -53,7 +53,10 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = convert_hex_file(Block)
-                return page[0][0]
+                if page[0][0] == b'\x0c':
+                    return 'Worked!!!'
+                
+                return 'Failed'
         except:
             return 'Not allowed'
     return render_template('upload.html')
@@ -76,6 +79,8 @@ def extractData(start,stop, raw_data):
 #Split string into nth
 def String_split_nth(str_line,n):
     list_splited = [str_line[i:i+n] for i in range(0,len(str_line),n)] #Split done here
+    for i in range(len(list_splited)):
+        list_splited[i] = binascii.b2a_hex(list_splited[i])  # turn list of strings to list of hex one-by-one
     return list_splited
 
 
