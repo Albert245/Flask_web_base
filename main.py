@@ -51,11 +51,16 @@ def upload():
                 for line in file.readlines():
                     Block.append(str(line.rstrip()))
                     
-                page = fill(Datafile2hex(Block))
+                page = Convert2Block(fill(Datafile2hex(Block)),128)
                 return page
         except:
             return 'Not allowed'
     return render_template('upload.html')
+
+
+
+ #====================================[  Library  ]=======================================
+
 
 def extractData(start,stop, raw_data):
     data = []
