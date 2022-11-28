@@ -53,7 +53,7 @@ def upload():
                     
                 page = Datafile2hex(Block)
                 page_block = fill(page)
-                return page
+                return page_block
         except:
             return 'Not allowed'
     return render_template('upload.html')
@@ -101,10 +101,10 @@ def fill(list):
     filled_list = []
     idx = 0
     for i in range(len(list)):
-        filled_list[i] = list[i]
+        filled_list.append(list[i])
         idx += 1
     while idx % 128 != 0:
-        filled_list[idx] = 0xff
+        filled_list.append(0xff)
         idx+=1
     return filled_list
 
