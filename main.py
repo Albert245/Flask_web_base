@@ -120,7 +120,6 @@ def fill(list):
 # reshape list to list width n
 def reshape_list(block,width):
     data = []
-    height = math.ceil(len(block)/width)
     for i in range(0,len(block),width):
         line = block[i:i+width]
         data.append(line)
@@ -128,4 +127,4 @@ def reshape_list(block,width):
 
 # convert hex list to numpy Block can be used for flashing
 def convert_hex_file(list):
-    return reshape_list(fill(Datafile2hex(list)),128)
+    return fill(Datafile2hex(list))
