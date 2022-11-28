@@ -51,7 +51,7 @@ def upload():
                 for line in file.readlines():
                     Block.append(str(line.rstrip()))
                     
-                page = convert_hex_file(Block)
+                page = fill(Datafile2hex(Block))
                 if page[0][0] == b'\x0c':
                     return 'Worked!!!'
                 
