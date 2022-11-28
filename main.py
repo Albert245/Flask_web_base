@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
 import os
 import numpy as np
+import binascii
 
 # ...
 app = Flask(__name__)
@@ -76,7 +77,7 @@ def extractData(start,stop, raw_data):
 def String_split_nth(str_line,n):
     list_splited = [str_line[i:i+n] for i in range(0,len(str_line),n)] #Split done here
     for i in range(len(list_splited)):
-        list_splited[i] = hex(int(list_splited[i],16))  # turn list of strings to list of hex one-by-one
+        list_splited[i] = binascii.b2a_hex(list_splited[i])  # turn list of strings to list of hex one-by-one
     return list_splited
 
 
@@ -118,6 +119,6 @@ def fill(list):
 def Convert2Block(list,n):
     return np.reshape(np.array(list),(len(list)//n,n))
 
-# convert hex list to numpy Block can use for flashing
+# convert hex list to numpy Block can be used for flashing
 def convert_hex_file(list):
     return Convert2Block(fill(Datafile2hex(list)),128)
