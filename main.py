@@ -51,8 +51,8 @@ def upload():
                 for line in file.readlines():
                     Block.append(str(line.rstrip()))
                     
-                page = extractData(11,-3,Block)
-                return page[0][0]
+                page = Datafile2hex(Block)
+                return page
         except:
             return 'Not allowed'
     return render_template('upload.html')
@@ -80,8 +80,8 @@ def String_split_nth(str_line,n):
     return list_splited
 
 
-
-def list2Dhex(list):
+# convert list to 1 list with 2 character per element
+def list_hex(list):
     list_out = []
     for i in range(0,len(list)):
         list_out.append(String_split_nth(list[i],2))
@@ -90,7 +90,7 @@ def list2Dhex(list):
 
 #  turn Datafile into 2D-list of hex
 def Datafile2hex(Data_list): 
-    Data_extracted = list2Dhex(extractData(11,-3,Data_list))
+    Data_extracted = list_hex(extractData(11,-3,Data_list))
     return Data_extracted
 
 # compress list of list to 1 list
@@ -115,9 +115,13 @@ def fill(list):
 
 
 # turn list to numpy Block[n]
-def Convert2Block(list,n):
-    return np.reshape(np.array(list),(len(list)//n,n))
+def reshape_list(block,width):
+    data = []
+    for i in range(0,len(block),width):
+        line = block[i:i+width]
+        data.append(line)
+    return data
 
 # convert hex list to numpy Block can be used for flashing
 def convert_hex_file(list):
-    return Convert2Block(fill(Datafile2hex(list)),128)
+    return reshape_list(fill(Datafile2hex(list)),128)
