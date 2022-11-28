@@ -52,7 +52,8 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = Datafile2hex(Block)
-                return str(len(page))
+                page_block = fill(page)
+                return page_block
         except:
             return 'Not allowed'
     return render_template('upload.html')
@@ -94,6 +95,19 @@ def compress_list(list):
     for i in range(len(list)):
         compress += list[i]
     return compress
+
+# fill list to 128 per
+def fill(list):
+    filled_list = []
+    idx = 0
+    for i in range(len(list)):
+        filled_list[i] = list[i]
+        idx += 1
+    while idx % 128 != 0:
+        filled_list[idx] = 0xff
+        idx+=1
+    return filled_list
+
 
 
 # turn list to Block[128]
