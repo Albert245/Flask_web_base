@@ -51,7 +51,7 @@ def upload():
                 for line in file.readlines():
                     Block.append(str(line.rstrip()))
                     
-                page = Convert2Block(fill(Datafile2hex(Block)),128)
+                page = convert_hex_file(Block)
                 return page[0][0]
         except:
             return 'Not allowed'
