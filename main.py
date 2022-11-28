@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
 import os
-import numpy as np
 import binascii
 
 # ...
@@ -52,7 +51,7 @@ def upload():
                 for line in file.readlines():
                     Block.append(str(line.rstrip()))
                     
-                page = convert_hex_file(Block)
+                page = extractData(11,-3,Block)
                 return page[0][0]
         except:
             return 'Not allowed'
