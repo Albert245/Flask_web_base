@@ -74,13 +74,29 @@ def String_split_nth(str_line,n):
         list_splited[i] = hex(int(list_splited[i],16))  # turn list of strings to list of hex one-by-one
     return list_splited
 
+
+
 def list2Dhex(list):
     list_out = []
     for i in range(0,len(list)):
         list_out.append(String_split_nth(list[i],2))
-    return list_out
+    combine = compress_list(list_out)
+    return combine
 
 #  turn Datafile into 2D-list of hex
 def Datafile2hex(Data_list): 
     Data_extracted = list2Dhex(extractData(11,-3,Data_list))
     return Data_extracted
+
+# compress list of list to 1 list
+def compress_list(list):
+    compress = []
+    for i in range(len(list)):
+        compress += list[i]
+    return compress
+
+
+# turn list to Block[128]
+# def Convert2Block():
+#     Block=[]
+#     for i in range :
