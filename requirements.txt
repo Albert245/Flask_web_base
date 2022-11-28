@@ -1,5 +1,3 @@
 flask
 gunicorn
 cgi-tools
-numpy
-pandas

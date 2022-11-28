@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
 import os
-import numpy as np
 import binascii
 
 # ...
@@ -52,11 +51,11 @@ def upload():
                 for line in file.readlines():
                     Block.append(str(line.rstrip()))
                     
-                # page = convert_hex_file(Block)
-                # if page[0][0] == b'\x0c':
-                #     return 'Worked!!!'
+                page = convert_hex_file(Block)
+                if page[0][0] == b'\x0c':
+                    return 'Worked!!!'
                 
-                return b'\x0c'
+                return 'Failed'
         except:
             return 'Not allowed'
     return render_template('upload.html')
@@ -119,9 +118,14 @@ def fill(list):
 
 
 # reshape list to list width n
-def Convert2Block(list,n):
-    return np.array2string(np.reshape(np.array(list),(len(list)//n,n)))
+def reshape_list(block,width):
+    data = []
+    height = math.ceil(len(block)/width)
+    for i in range(0,len(block),width):
+        line = block[i:i+width]
+        data.append(line)
+    return data
 
 # convert hex list to numpy Block can be used for flashing
 def convert_hex_file(list):
-    return Convert2Block(fill(Datafile2hex(list)),128)
+    return reshape_list(fill(Datafile2hex(list)),128)
