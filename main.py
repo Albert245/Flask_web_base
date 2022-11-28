@@ -51,9 +51,8 @@ def upload():
                 for line in file.readlines():
                     Block.append(str(line.rstrip()))
                     
-                page = Datafile2hex(Block)
-                page_block = fill(page)
-                return page_block
+                page = convert_hex_file(Block)
+                return page
         except:
             return 'Not allowed'
     return render_template('upload.html')
@@ -110,7 +109,10 @@ def fill(list):
 
 
 
-# turn list to Block[128]
-# def Convert2Block():
-#     Block=[]
-#     for i in range :
+# turn list to numpy Block[n]
+def Convert2Block(list,n):
+    return np.reshape(np.array(list),(len(list)//n,n))
+
+# convert hex list to numpy Block can use for flashing
+def convert_hex_file(list):
+    return Convert2Block(fill(Datafile2hex(list)),128)
