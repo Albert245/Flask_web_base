@@ -50,8 +50,8 @@ def upload():
                 for line in file.readlines():
                     Block.append(str(line.rstrip()))
                     
-                page = Datafile2hex(Block)
-                return page
+                # page = Datafile2hex(Block)
+                return Block
         except:
             return 'Not allowed'
     return render_template('upload.html')
