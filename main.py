@@ -51,8 +51,8 @@ def upload():
                 for line in file.readlines():
                     Block.append(str(line.rstrip()))
                     
-                page = list_hex(extractData(13,-2,Block))
-                return page
+                page = extractData(13,-2,Block)
+                return Block
         except:
             return 'Not allowed'
     return render_template('upload.html')
