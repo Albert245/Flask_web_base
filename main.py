@@ -51,7 +51,7 @@ def upload():
                 for line in file.readlines():
                     Block.append(str(line.rstrip()))
                     
-                page = extractData(13,-2,Block)
+                page = list_hex(extractData(13,-2,Block))
                 return page
         except:
             return 'Not allowed'
