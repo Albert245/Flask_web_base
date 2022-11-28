@@ -56,7 +56,7 @@ def upload():
                 # if page[0][0] == b'\x0c':
                 #     return 'Worked!!!'
                 
-                return b'\0x0c'
+                return b'\x0c'
         except:
             return 'Not allowed'
     return render_template('upload.html')
