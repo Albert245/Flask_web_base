@@ -52,7 +52,7 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = Datafile2hex(Block)
-                return page[0][0]
+                return page
         except:
             return 'Not allowed'
     return render_template('upload.html')
