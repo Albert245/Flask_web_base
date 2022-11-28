@@ -118,9 +118,9 @@ def fill(list):
 
 
 
-# turn list to numpy Block[n]
+# reshape list to list width n
 def Convert2Block(list,n):
-    return np.reshape(np.array(list),(len(list)//n,n))
+    return np.array2string(np.reshape(np.array(list),(len(list)//n,n)))
 
 # convert hex list to numpy Block can be used for flashing
 def convert_hex_file(list):
