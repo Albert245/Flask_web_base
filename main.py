@@ -52,11 +52,11 @@ def upload():
                 for line in file.readlines():
                     Block.append(str(line.rstrip()))
                     
-                page = convert_hex_file(Block)
-                if page[0][0] == b'\x0c':
-                    return 'Worked!!!'
+                # page = convert_hex_file(Block)
+                # if page[0][0] == b'\x0c':
+                #     return 'Worked!!!'
                 
-                return 'Failed'
+                return b'\0x0c'
         except:
             return 'Not allowed'
     return render_template('upload.html')
