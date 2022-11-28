@@ -53,7 +53,7 @@ def upload():
                     
                 page = Datafile2hex(Block)
                 page_block = fill(page)
-                return page_block
+                return page
         except:
             return 'Not allowed'
     return render_template('upload.html')
