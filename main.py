@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
 import os
 import binascii
-import math
 # ...
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 1024*32
@@ -52,10 +51,7 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = Datafile2hex(Block)
-                if page[0][0] == b'\x0c':
-                    return 'Worked!!!'
-                
-                return 'Failed'
+                return page
         except:
             return 'Not allowed'
     return render_template('upload.html')
