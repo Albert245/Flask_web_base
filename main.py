@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 import os
 import DataProcess as DP
 import pyfirebase as base
+import ntpath
 
 
 
@@ -57,7 +58,7 @@ def upload():
                     
                 page = DP.convert_hex_file(Block)
                 
-                return str(os.path.basename(file))
+                return ntpath.basename(file)
         except:
             return 'Not allowed'
     return render_template('upload.html')
