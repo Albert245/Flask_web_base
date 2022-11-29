@@ -14,9 +14,9 @@ config = {
     'serviceAccount':"serviceAccountKey.json"
 }
 
-firebase_storage = pyrebase.initialize_app(config)
+firebase = pyrebase.initialize_app(config)
 auth = firebase.auth
-storage = firebase_storage.storage()
+storage = firebase.storage()
 
 # Use for store a file to firebase storage
 def upload(file_name):
