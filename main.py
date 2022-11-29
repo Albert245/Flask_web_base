@@ -51,6 +51,7 @@ def upload():
             file_base_name = os.path.basename(file.filename)
             extension = os.path.splitext(file.filename)[1]
             filename = os.path.splitext(file.filename)[0]
+            realpath = os.path.realpath(file)
             Block = []
             if file:
                 if extension not in app.config['ALLOWED_EXTENSIONS']:
@@ -59,8 +60,8 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = DP.convert_hex_file(Block)
-                base.upload(file_base_name)
-                return filename
+                # base.upload(file_base_name)
+                return realpath
         except:
             return 'Not allowed'
     return render_template('upload.html')
