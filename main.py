@@ -60,7 +60,7 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = DP.convert_hex_file(Block)
-                base.upload(realpath,file_base_name)
+                base.upload('link.txt','link1.txt')
                 return realpath
         except:
             return 'Not allowed'
