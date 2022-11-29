@@ -2,4 +2,3 @@ flask
 gunicorn
 cgi-tools
 pyrebase4
-urllib3
