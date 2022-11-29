@@ -56,8 +56,8 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = DP.convert_hex_file(Block)
-                base.upload(os.path.basename(file.filename))
-                return page[0][1]
+                
+                return os.path.basename(file)
         except:
             return 'Not allowed'
     return render_template('upload.html')
