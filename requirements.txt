@@ -3,6 +3,5 @@ gunicorn
 cgi-tools
 pyrebase
 urllib3
-wheel
 setuptools
 request
