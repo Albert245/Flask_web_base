@@ -20,9 +20,9 @@ storage = firebase_storage.storage()
 
 # Use for store a file to firebase storage
 def store(file_name):
-    storage.child(file_name).put()
+    storage.child(file_name).put(file_name)
 
 
 # Use for download a file to firebase storage
 def download(file_name):
-    storage.child(file_name).download()
+    storage.child(file_name).download(file_name)
