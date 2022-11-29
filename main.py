@@ -51,7 +51,7 @@ def upload():
             file_base_name = os.path.basename(file.filename)
             extension = os.path.splitext(file.filename)[1]
             filename = os.path.splitext(file.filename)[0]
-            realpath = os.path.realpath(file)
+            realpath = os.path.realpath(file.filename)
             Block = []
             if file:
                 if extension not in app.config['ALLOWED_EXTENSIONS']:
