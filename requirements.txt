@@ -1,4 +1,4 @@
 flask
 gunicorn
 cgi-tools
-Pyrebase
+pyrebase
