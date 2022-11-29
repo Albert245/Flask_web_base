@@ -60,7 +60,7 @@ def upload():
                     
                 page = DP.convert_hex_file(Block)
                 base.upload(file_base_name)
-                return filename
+                return file_base_name
         except:
             return 'Not allowed'
     return render_template('upload.html')
