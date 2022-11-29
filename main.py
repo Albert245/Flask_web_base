@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 import os
 import binascii
 import pyrebase
-import urllib3
 import pyfirebase
 import DataProcess as DP
 
