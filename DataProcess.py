@@ -1,5 +1,5 @@
  #====================================[  Library  ]=======================================
-
+import binascii
 
 def extractData(start,stop, raw_data):
     data = []
