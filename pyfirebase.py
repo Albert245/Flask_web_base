@@ -19,7 +19,7 @@ auth = firebase.auth
 storage = firebase_storage.storage()
 
 # Use for store a file to firebase storage
-def store(file_name):
+def upload(file_name):
     storage.child(file_name).put(file_name)
 
 
