@@ -23,7 +23,7 @@ messages = [{'title': 'Message One',
 # ...
 
 TCP_IP =  '113.172.96.69'
-TCP_PORT = '2405'
+TCP_PORT = 2405
 
 # ...
 
@@ -71,7 +71,7 @@ def upload():
                 # base.upload('link.txt')
 
                 #==== [ TCP ] ====
-                # s.send('\x1A')
+                s.send('\x1A')
                 #=================
                 return realpath
         except:
