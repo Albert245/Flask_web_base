@@ -2,3 +2,4 @@ flask
 gunicorn
 cgi-tools
 pyrebase4
+socket
