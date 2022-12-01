@@ -71,7 +71,7 @@ def upload():
                 # base.upload('link.txt')
 
                 #==== [ TCP ] ====
-                s.send('\x1A')
+                # s.send('\x1A')
                 #=================
                 return realpath
         except:
