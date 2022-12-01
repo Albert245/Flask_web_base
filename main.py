@@ -52,9 +52,10 @@ def create():
 @app.route('/upload', methods = ('GET','POST'))
 def upload():
     if request.method == 'POST':
+        s = socket.socket()
+        s.connect((TCP_IP,TCP_PORT))
         try:
-            s = socket.socket()
-            s.connect((TCP_IP,TCP_PORT))
+            
             file = request.files['uploadfile']
             file_base_name = os.path.basename(file.filename)
             extension = os.path.splitext(file.filename)[1]
@@ -71,7 +72,7 @@ def upload():
                 # base.upload('link.txt')
 
                 #==== [ TCP ] ====
-                s.send('\x1A')
+                s.send(b'\x1A')
                 #=================
                 return realpath
         except:
