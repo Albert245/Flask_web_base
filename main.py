@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, url_for, flash, redirect
 import os
 import DataProcess as DP
 import pyfirebase as base
-import ntpath
 import socket
 
 
@@ -20,6 +19,12 @@ messages = [{'title': 'Message One',
             {'title': 'Message Two',
              'content': 'Message Two Content'}
             ]
+
+# ...
+
+TCP_IP =  '113.172.96.69'
+TCP_PORT = '2405'
+
 # ...
 
 @app.route('/')
@@ -48,6 +53,8 @@ def create():
 def upload():
     if request.method == 'POST':
         try:
+            s = socket.socket()
+            s.connect((TCP_IP,TCP_PORT))
             file = request.files['uploadfile']
             file_base_name = os.path.basename(file.filename)
             extension = os.path.splitext(file.filename)[1]
@@ -62,6 +69,10 @@ def upload():
                     
                 page = DP.convert_hex_file(Block)
                 # base.upload('link.txt')
+
+                #==== [ TCP ] ====
+                s.send('\x1A')
+                #=================
                 return realpath
         except:
             return 'Not allowed'
