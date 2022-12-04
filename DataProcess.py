@@ -48,7 +48,7 @@ def fill(list):
         filled_list.append(list[i])
         idx += 1
     while idx % 128 != 0:
-        filled_list.append(hex(255))
+        filled_list.append(255)
         idx+=1
     return filled_list
 
