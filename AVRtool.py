@@ -116,7 +116,7 @@ s = socket.socket()
 def AVR_ISP(ip,port,hex_data):
     logs = []
     addr = [0x00,0x00]
-    add_count = 0
+    add_count = len(hex_data)
     start_prog(ip,port)
     getSync()
     setProg()
@@ -144,8 +144,8 @@ def sendByte(list,logs):
     return list(ret)
 
 # list type hex in --> send to programmer return (True: 1, False: error log)
-def excCmd(list,resp):
-    ret = sendByte(list)                #list of int
+def excCmd(list,resp,log):
+    ret = sendByte(list,log)                #list of int
     check = 1
     for i in resp:
         if i not in ret:
@@ -157,12 +157,12 @@ def excCmd(list,resp):
             for name,value in Command.items():
                 if i == value:
                     err_read.append(name)
-        return err_read
+        return log.append(err_read)
     return 1
 
 # check if in sync
-def getSync():
-    return excCmd([0x30, 0x20],[0x14, 0x10])
+def getSync(log):
+    return excCmd([0x30, 0x20],[0x14, 0x10],log)
 
 # set Device
 def setProg():
