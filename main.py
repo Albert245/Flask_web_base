@@ -74,7 +74,7 @@ def upload():
                 #==== [ TCP ] ====
                 s.send(b'\x1A')
                 #=================
-                return realpath
+                return page
         except:
             return 'Not allowed'
     return render_template('upload.html')

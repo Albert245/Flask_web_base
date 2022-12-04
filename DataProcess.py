@@ -1,5 +1,5 @@
  #====================================[  Library  ]=======================================
-import binascii
+
 
 def extractData(start,stop, raw_data):
     data = []
@@ -16,7 +16,7 @@ def String_split_nth(str_line,n):
     list_splited = [str_line[i:i+n] for i in range(0,len(str_line),n)] #Split done here
     print(list_splited)
     for i in range(len(list_splited)):
-        list_splited[i] = binascii.a2b_hex(list_splited[i])  # turn list of strings to list of hex one-by-one
+        list_splited[i] = int(list_splited[i],16)  # turn list of strings to list of hex one-by-one
     return list_splited
 
 
