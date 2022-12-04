@@ -1,5 +1,5 @@
-import socket 
-import DataProcess as DP
+import socket
+# import DataProcess as DP
 import time
 Command = {
     'Resp_STK_OK'	                : 0x10,
@@ -113,56 +113,28 @@ AVR_model = [
 s = socket.socket()
 
 
-def AVR_ISP(ip,port,hex_data):
-    logs = []
-    addr = [0x00,0x00]
-    add_count = len(hex_data)
-    start_prog(ip,port)
-    getSync()
-    setProg()
-    setProgEx()
-    enterProgMode()
-    getSignature()
-    readPage(add_count)
-    end_prog()
-    pass
-
-
 def start_prog(ip,port):
     s.connect((ip,port))
 
 def end_prog():
     s.close()
 
-def sendByte(list,logs):
-    logs.append(list)
-    data = bytes(list)
+def sendByte(lists):
+    data = bytes(lists)
     s.send(data)
-    time.sleep(0.1)
-    ret = s.recv(1024)
-    logs.append(ret)
-    return list(ret)
+    time.sleep(0.3)
+    ret = list(s.recv(1024))
+    return ret
 
 # list type hex in --> send to programmer return (True: 1, False: error log)
-def excCmd(list,resp,log):
-    ret = sendByte(list,log)                #list of int
-    check = 1
-    for i in resp:
-        if i not in ret:
-            check = 0
-    if check == 0:
-        err_hex = ret
-        err_read = []
-        for i in err_hex:
-            for name,value in Command.items():
-                if i == value:
-                    err_read.append(name)
-        return log.append(err_read)
-    return 1
+def excCmd(cmd,log):
+    log.append(cmd)
+    return log.append(bytes(sendByte(cmd)))
+
 
 # check if in sync
-def getSync(log):
-    return excCmd([0x30, 0x20],[0x14, 0x10],log)
+def getSync():
+    return sendByte([0x30,0x20])
 
 # set Device
 def setProg():
@@ -184,9 +156,9 @@ def getSignature():
     cmd = [0x75, 0x20]
     sign = sendByte(cmd)
     signature = sign[1:-1:1]
-    for s in AVR_signature:
-        if s == signature:
-            return AVR_model[s]
+    for s in range(len(AVR_signature)):
+        if AVR_signature[s] == signature:
+            return 'Device model: {}'.format(AVR_model[s])
     return 'Unkown model (signature {}), please check again'.format(signature)
 
 # Leave Program mode
@@ -198,7 +170,7 @@ def exProgMode():
 def IncreaseAddress(addr):
     addr[1] += 0x40
     if addr[1]>255:
-        addr[1] = addr[1] % 255
+        addr[1] = 0x00
         addr[0] += 0x1
     return addr
 
@@ -209,18 +181,11 @@ def loadAddress(addr):
     load_addr = head + addr + tail
     return sendByte(load_addr)
 
-def compare(page,block):
-    page_read = page[1:-1:1]
-    for i in range(len(page_read)):
-        if page_read[i] != block[i]:
-            return 'Verification Failure'
-    return 1
-
-def flashPage(data):
+def flashPage(data,log):
     head = [0x64, 0x00, 0x80,0x46]
     tail = [0x20]
     flash_page = head + data + tail
-    return sendByte(flash_page)
+    return excCmd(flash_page,log)
 
 # Read page on microchip
 def readPage(count):
@@ -229,5 +194,40 @@ def readPage(count):
     read_page =[]
     for i in range(count):
         loadAddress(read_addr)
-        read_page.append(sendByte(cmd))
+        page_raw = sendByte(cmd)
+        read_page.append(page_raw[1:-1:1])
+        IncreaseAddress(read_addr)
     return read_page
+
+def compare(page,block):
+    for i in range(len(page)):
+        if page[i] != block[i]:
+            return 'Verification Failure: page[{}] = {} block[{}] = {}'.format(i,page[i],i,block[i])
+    return 1
+
+
+
+def AVR_ISP(ip,port,hex_data):
+    logs = []
+    addr = [0x00,0x00]
+    add_count = len(hex_data)
+    start_prog(ip,port)
+    logs.append('get Sync')
+    logs.append(getSync())
+    logs.append('set prog')
+    logs.append(setProg())
+    logs.append('set ProgEx')
+    logs.append(setProgEx())
+    logs.append('Enter Programming mode')
+    logs.append(enterProgMode())
+    logs.append('Get system signature: ')
+    logs.append(getSignature())
+    for i in range(len(hex_data)):
+        logs.append('Flash page at address: {}'.format(bytes(addr)))
+        loadAddress(addr)
+        flashPage(hex_data[i],logs)
+        IncreaseAddress(addr)
+    logs.append(compare(readPage(add_count),hex_data))
+    logs.append(exProgMode())
+    end_prog()
+    return logs
