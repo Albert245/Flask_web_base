@@ -59,7 +59,6 @@ def upload():
             file = request.files['uploadfile']
             file_base_name = os.path.basename(file.filename)
             extension = os.path.splitext(file.filename)[1]
-            filename = os.path.splitext(file.filename)[0]
             realpath = os.path.realpath(file.filename)
             Block = []
             if file:
