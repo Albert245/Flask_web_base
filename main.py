@@ -66,7 +66,7 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = DP.convert_hex_file(Block)
-                return len(page)
+                return str(len(page))
         except:
             return 'Not allowed'
     return render_template('upload.html')
