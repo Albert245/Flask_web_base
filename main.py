@@ -71,7 +71,7 @@ def upload():
                 # base.upload('link.txt')
 
                 #==== [ TCP ] ====
-                s.send(b'\x1A')
+                s.send(b'\x55')
                 #=================
                 return page
         except:
