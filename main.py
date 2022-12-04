@@ -52,8 +52,6 @@ def create():
 @app.route('/upload', methods = ('GET','POST'))
 def upload():
     if request.method == 'POST':
-        # s = socket.socket()
-        # s.connect((TCP_IP,TCP_PORT))
         try:
             
             file = request.files['uploadfile']
@@ -68,12 +66,7 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = DP.convert_hex_file(Block)
-                # base.upload('link.txt')
-
-                #==== [ TCP ] ====
-                # s.send(b'\x55')
-                #=================
-                return page
+                return len(page)
         except:
             return 'Not allowed'
     return render_template('upload.html')
