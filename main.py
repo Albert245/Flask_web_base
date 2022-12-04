@@ -52,8 +52,8 @@ def create():
 @app.route('/upload', methods = ('GET','POST'))
 def upload():
     if request.method == 'POST':
-        s = socket.socket()
-        s.connect((TCP_IP,TCP_PORT))
+        # s = socket.socket()
+        # s.connect((TCP_IP,TCP_PORT))
         try:
             
             file = request.files['uploadfile']
@@ -71,7 +71,7 @@ def upload():
                 # base.upload('link.txt')
 
                 #==== [ TCP ] ====
-                s.send(b'\x55')
+                # s.send(b'\x55')
                 #=================
                 return page
         except:
