@@ -127,7 +127,7 @@ def end_prog():
 def sendByte(lists):
     data = bytes(lists)
     s.send(data)
-    time.sleep(0.3)
+    time.sleep(0.1)
     ret = list(s.recv(1024))
     return ret
 
