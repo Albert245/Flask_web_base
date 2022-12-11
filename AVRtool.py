@@ -134,7 +134,7 @@ def sendByte(lists):
 # list type hex in --> send to programmer return (True: 1, False: error log)
 def excCmd(cmd ,log):
     log.append(cmd)
-    return log.append(bytes(sendByte(cmd)))
+    return log.append(sendByte(cmd))
 
 
 # check if in sync
@@ -148,7 +148,7 @@ def getParameter():
     log = []
     for p in param:
         cmd[1] = p
-        log.append(hexConvert(sendByte(cmd)))
+        log.append(sendByte(cmd))
     return log
 
 # set Device
@@ -258,7 +258,7 @@ def AVR_ISP(ip, port, hex_data):
     logs.append(universal())
 
     for i in range(len(hex_data)):
-        logs.append('Flash page at address: {}'.format(bytes(addr)))
+        logs.append('Flash page at address: {}'.format(addr))
         logs.append(hexConvert(loadAddress(addr)))
         flashPage(hex_data[i], logs)
         IncreaseAddress(addr)
