@@ -1,8 +1,9 @@
 import socket
 # import DataProcess as DP
 import time
+
 Command = {
-    'Resp_STK_OK'	                : 0x10,
+    'Resp_STK_OK'	: 0x10,
     'Resp_STK_FAILED'	            : 0x11,
     'Resp_STK_UNKNOWN'	            : 0x12,
     'Resp_STK_NODEVICE'	            : 0x13,
@@ -112,9 +113,13 @@ AVR_model = [
 
 s = socket.socket()
 
+def hexConvert(lists):
+    for i in range(len(lists)):
+        lists[i] = hex(lists[i])
+    return lists
 
-def start_prog(ip,port):
-    s.connect((ip,port))
+def start_prog(ip ,port):
+    s.connect((ip ,port))
 
 def end_prog():
     s.close()
@@ -127,14 +132,24 @@ def sendByte(lists):
     return ret
 
 # list type hex in --> send to programmer return (True: 1, False: error log)
-def excCmd(cmd,log):
+def excCmd(cmd ,log):
     log.append(cmd)
     return log.append(bytes(sendByte(cmd)))
 
 
 # check if in sync
 def getSync():
-    return sendByte([0x30,0x20])
+    return sendByte([0x30 ,0x20])
+
+# Get parameter
+def getParameter():
+    param = [0x80, 0x81, 0x82, 0x98, 0x84, 0x85, 0x86, 0x87, 0x89, 0x81, 0x82]
+    cmd = [0x41, 0x80, 0x20]
+    log = []
+    for p in param:
+        cmd[1] = p
+        log.append(hexConvert(sendByte(cmd)))
+    return log
 
 # set Device
 def setProg():
@@ -146,20 +161,34 @@ def setProgEx():
     cmd = [0x45, 0x05, 0x04, 0xd7, 0xc2, 0x00, 0x20]
     return sendByte(cmd)
 
-#Enter Program mode
+
+# Enter Program mode
 def enterProgMode():
     cmd = [0x50, 0x20]
     return sendByte(cmd)
 
-#Get signature
+
+# Get signature
 def getSignature():
     cmd = [0x75, 0x20]
     sign = sendByte(cmd)
     signature = sign[1:-1:1]
     for s in range(len(AVR_signature)):
         if AVR_signature[s] == signature:
-            return 'Device model: {}'.format(AVR_model[s])
-    return 'Unkown model (signature {}), please check again'.format(signature)
+            return 'model: {}'.format(AVR_model[s])
+    return 'Unknown model (signature {}), please check again'.format(signature)
+
+# Universal:
+def universal():
+    cmd1 = [0x56, 0x50, 0x00, 0x00, 0x00, 0x20]
+    cmd2 = [0x56, 0x58, 0x08, 0x00, 0x00, 0x20]
+    cmd3 = [0x56, 0x50, 0x08, 0x00, 0x00, 0x20]
+    log = []
+    log.append(sendByte(cmd1))
+    log.append(sendByte(cmd2))
+    log.append(sendByte(cmd3))
+    return log
+
 
 # Leave Program mode
 def exProgMode():
@@ -168,10 +197,10 @@ def exProgMode():
 
 
 def IncreaseAddress(addr):
-    addr[1] += 0x40
-    if addr[1]>255:
-        addr[1] = 0x00
-        addr[0] += 0x1
+    addr[0] += 0x40
+    if addr[0] >255:
+        addr[0] = 0x00
+        addr[1] += 0x01
     return addr
 
 
@@ -181,15 +210,15 @@ def loadAddress(addr):
     load_addr = head + addr + tail
     return sendByte(load_addr)
 
-def flashPage(data,log):
-    head = [0x64, 0x00, 0x80,0x46]
+def flashPage(data ,log):
+    head = [0x64, 0x00, 0x80 ,0x46]
     tail = [0x20]
     flash_page = head + data + tail
-    return excCmd(flash_page,log)
+    return excCmd(flash_page ,log)
 
 # Read page on microchip
 def readPage(count):
-    read_addr = [0x00,0x00]
+    read_addr = [0x00 ,0x00]
     cmd = [0x74, 0x00, 0x80, 0x46, 0x20]
     read_page =[]
     for i in range(count):
@@ -199,35 +228,45 @@ def readPage(count):
         IncreaseAddress(read_addr)
     return read_page
 
-def compare(page,block):
+
+def compare(page, block):
+    log = []
     for i in range(len(page)):
         if page[i] != block[i]:
-            return 'Verification Failure: page[{}] = {} block[{}] = {}'.format(i,page[i],i,block[i])
-    return 1
+            log.append('Verification Failure: \npage[{}] = {} \nblock[{}] = {}'.format(i, page[i], i, block[i]))
+    return log
 
 
-
-def AVR_ISP(ip,port,hex_data):
+def AVR_ISP(ip, port, hex_data):
     logs = []
-    addr = [0x00,0x00]
+    addr = [0x00, 0x00]
     add_count = len(hex_data)
-    start_prog(ip,port)
+    start_prog(ip, port)
     logs.append('get Sync')
-    logs.append(getSync())
+    logs.append(hexConvert(getSync()))
+    logs.append('Get parameter')
+    logs.append(getParameter())
     logs.append('set prog')
-    logs.append(setProg())
+    logs.append(hexConvert(setProg()))
     logs.append('set ProgEx')
-    logs.append(setProgEx())
+    logs.append(hexConvert(setProgEx()))
     logs.append('Enter Programming mode')
-    logs.append(enterProgMode())
+    logs.append(hexConvert(enterProgMode()))
     logs.append('Get system signature: ')
     logs.append(getSignature())
+    logs.append('Universal')
+    logs.append(universal())
+
     for i in range(len(hex_data)):
         logs.append('Flash page at address: {}'.format(bytes(addr)))
-        loadAddress(addr)
-        flashPage(hex_data[i],logs)
+        logs.append(hexConvert(loadAddress(addr)))
+        flashPage(hex_data[i], logs)
         IncreaseAddress(addr)
-    logs.append(compare(readPage(add_count),hex_data))
+    Page = readPage(add_count)
+    logs.append(Page)
+    logs += compare(Page, hex_data)
+    logs.append('Universal')
+    logs.append(universal())
     logs.append(exProgMode())
     end_prog()
     return logs
