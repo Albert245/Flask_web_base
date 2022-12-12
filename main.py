@@ -67,7 +67,7 @@ def upload():
                     
                 page = DP.convert_hex_file(Block)
                 log = AVR.AVR_ISP(TCP_IP,TCP_PORT,page)
-                return page
+                return log
         except:
             return 'Not allowed'
     return render_template('upload.html')
