@@ -66,7 +66,7 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = DP.convert_hex_file(Block)
-                # log = AVR.AVR_ISP(TCP_IP,TCP_PORT,page)
+                log = AVR.AVR_ISP(TCP_IP,TCP_PORT,page)
                 return page
         except:
             return 'Not allowed'
