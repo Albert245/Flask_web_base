@@ -52,22 +52,22 @@ def create():
 @app.route('/upload', methods = ('GET','POST'))
 def upload():
     if request.method == 'POST':
-        try:
-            
-            file = request.files['uploadfile']
-            # file_base_name = os.path.basename(file.filename)
-            extension = os.path.splitext(file.filename)[1]
-            # realpath = os.path.realpath(file.filename)
-            Block = []
-            if file:
-                if extension not in app.config['ALLOWED_EXTENSIONS']:
-                    return 'Not a hex file'
-                for line in file.readlines():
-                    Block.append(str(line.rstrip()))
-                    
-                page = DP.convert_hex_file(Block)
-                log = AVR.AVR_ISP(TCP_IP,TCP_PORT,page)
-                return log
-        except:
-            return 'Not allowed'
+    
+        
+        file = request.files['uploadfile']
+        # file_base_name = os.path.basename(file.filename)
+        extension = os.path.splitext(file.filename)[1]
+        # realpath = os.path.realpath(file.filename)
+        Block = []
+        if file:
+            if extension not in app.config['ALLOWED_EXTENSIONS']:
+                return 'Not a hex file'
+            for line in file.readlines():
+                Block.append(str(line.rstrip()))
+                
+            page = DP.convert_hex_file(Block)
+            log = AVR.AVR_ISP(TCP_IP,TCP_PORT,page)
+            return log
+    
+        return 'Not allowed'
     return render_template('upload.html')
