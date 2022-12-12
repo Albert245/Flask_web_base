@@ -236,7 +236,9 @@ def compare(page, block):
             log.append('Verification Failure: page[{}] != block[{}]'.format(i,i))
             for j in range(len(page[i])):
                 if page[i][j] != block[i][j]:
-                    log.append('Failed at page[{}][{}] != block [{}][{}] ### ( {} != {} ) ### '.format(i, j, i, j, page[i][j], block[i][j]))            
+                    log.append('Failed at page[{}][{}] != block [{}][{}] ### ( {} != {} ) ### '.format(i, j, i, j, page[i][j], block[i][j]))
+                    break
+            break
     return log
 
 
