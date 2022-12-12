@@ -69,5 +69,5 @@ def upload():
                 log = AVR.AVR_ISP(TCP_IP,TCP_PORT,page)
                 return log
         except:
-            return 'Not allow'
+            return 'Not allowed'
     return render_template('upload.html')
