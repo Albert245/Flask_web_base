@@ -114,9 +114,10 @@ AVR_model = [
 s = socket.socket()
 
 def hexConvert(lists):
+    list_out = []
     for i in range(len(lists)):
-        lists[i] = hex(lists[i])
-    return lists
+        list_out.append(hex(lists[i]))
+    return list_out
 
 def start_prog(ip ,port):
     s.connect((ip ,port))
@@ -133,8 +134,8 @@ def sendByte(lists):
 
 # list type hex in --> send to programmer return (True: 1, False: error log)
 def excCmd(cmd ,log):
-    log.append(cmd)
-    return log.append(sendByte(cmd))
+    log.append(hexConvert(cmd))
+    return log.append(hexConvert(sendByte(cmd)))
 
 
 # check if in sync
@@ -142,13 +143,19 @@ def getSync():
     return sendByte([0x30 ,0x20])
 
 # Get parameter
-def getParameter():
-    param = [0x80, 0x81, 0x82, 0x98, 0x84, 0x85, 0x86, 0x87, 0x89, 0x81, 0x82]
+def getParameter(mode):
+    param1 = [0x80, 0x81, 0x82, 0x98, 0x84, 0x85, 0x86, 0x87, 0x89, 0x81, 0x82]
+    param2 = [0x81, 0x82]
     cmd = [0x41, 0x80, 0x20]
     log = []
-    for p in param:
-        cmd[1] = p
-        log.append(sendByte(cmd))
+    if mode == 1:
+        for p in param1:
+            cmd[1] = p
+            log.append(sendByte(cmd))
+    if mode == 2:
+        for p in param2:
+            cmd[1] = p
+            log.append(sendByte(cmd))
     return log
 
 # set Device
@@ -180,13 +187,14 @@ def getSignature():
 
 # Universal:
 def universal():
-    cmd1 = [0x56, 0x50, 0x00, 0x00, 0x00, 0x20]
-    cmd2 = [0x56, 0x58, 0x08, 0x00, 0x00, 0x20]
-    cmd3 = [0x56, 0x50, 0x08, 0x00, 0x00, 0x20]
+    head = [0x56, 0x30, 0x00, 0x00, 0x00, 0x20]
+    head = [0x56]
+    tail = [0x00, 0x20]
+    cmd = [[0x30, 0x00, 0x00], [0x30, 0x00, 0x01], [0x30, 0x00, 0x02], [0xac, 0x80, 0x00]]
     log = []
-    log.append(sendByte(cmd1))
-    log.append(sendByte(cmd2))
-    log.append(sendByte(cmd3))
+    for i in cmd:
+        cmd_config = head + i + tail
+        log.append(sendByte(cmd_config))
     return log
 
 
@@ -204,25 +212,26 @@ def IncreaseAddress(addr):
     return addr
 
 
-def loadAddress(addr):
+def loadAddress(addr, log):
     head = [0x55]
     tail = [0x20]
     load_addr = head + addr + tail
-    return sendByte(load_addr)
+    return excCmd(load_addr,log)
 
-def flashPage(data ,log):
-    head = [0x64, 0x00, 0x80 ,0x46]
+def flashPage(data, log):
+    head = [0x64, 0x00, 0x80,0x46]
     tail = [0x20]
     flash_page = head + data + tail
-    return excCmd(flash_page ,log)
+    return excCmd(flash_page, log)
 
 # Read page on microchip
 def readPage(count):
     read_addr = [0x00 ,0x00]
     cmd = [0x74, 0x00, 0x80, 0x46, 0x20]
     read_page =[]
+    log = []
     for i in range(count):
-        loadAddress(read_addr)
+        loadAddress(read_addr,log)
         page_raw = sendByte(cmd)
         read_page.append(page_raw[1:-1:1])
         IncreaseAddress(read_addr)
@@ -250,7 +259,15 @@ def AVR_ISP(ip, port, hex_data):
     logs.append('get Sync')
     logs.append(hexConvert(getSync()))
     logs.append('Get parameter')
-    logs.append(getParameter())
+    logs.append(getParameter(1))
+    logs.append('set prog')
+    logs.append(hexConvert(setProg()))
+    logs.append('set ProgEx')
+    logs.append(hexConvert(setProgEx()))
+    logs.append('Universal')
+    logs.append(universal())
+    logs.append('Get parameter')
+    logs.append(getParameter(2))
     logs.append('set prog')
     logs.append(hexConvert(setProg()))
     logs.append('set ProgEx')
@@ -263,14 +280,15 @@ def AVR_ISP(ip, port, hex_data):
     logs.append(universal())
 
     for i in range(len(hex_data)):
-        logs.append('Flash page at address: {}'.format(addr))
-        logs.append(hexConvert(loadAddress(addr)))
+        logs.append('Flash page at address: {}  {}'.format(hex(addr[0]),hex(addr[1])))
+        loadAddress(addr,logs)
         flashPage(hex_data[i], logs)
         IncreaseAddress(addr)
     Page = readPage(add_count)
     logs += compare(Page, hex_data)
-    logs.append('Universal')
-    logs.append(universal())
+    # logs.append('Universal')
+    # logs.append(universal())
+    logs.append('Exit Programming mode')
     logs.append(exProgMode())
     end_prog()
     return logs
