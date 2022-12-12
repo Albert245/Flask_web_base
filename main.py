@@ -52,6 +52,7 @@ def create():
 @app.route('/upload', methods = ('GET','POST'))
 def upload():
     if request.method == 'POST':
+        log =[]
         try:
             
             file = request.files['uploadfile']
@@ -67,9 +68,10 @@ def upload():
                     
                 page = DP.convert_hex_file(Block)
                 Block.clear()
-                log = AVR.AVR_ISP(TCP_IP,TCP_PORT,page)
+                log.append(AVR.AVR_ISP(TCP_IP,TCP_PORT,page))
                 page.clear()
                 return log
         except:
             return 'Not allowed.'
+        log.clear()
     return render_template('upload.html')
