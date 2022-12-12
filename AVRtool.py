@@ -233,10 +233,10 @@ def compare(page, block):
     log = []
     for i in range(len(page)):
         if page[i] != block[i]:
-            log.append('Verification Failure: page[{}] != block[{}]'.format(i,i))
+            log.append('Verification Error: page[{}] != block[{}]'.format(i,i))
             for j in range(len(page[i])):
                 if page[i][j] != block[i][j]:
-                    log.append('Failed at page[{}][{}] != block [{}][{}] ### ( {} != {} ) ### '.format(i, j, i, j, page[i][j], block[i][j]))
+                    log.append('First mismatch at byte {} :  {} != {} '.format(i*128+j, hex(page[i][j]), hex(block[i][j])))
                     break
             break
     return log
