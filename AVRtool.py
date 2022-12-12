@@ -233,7 +233,10 @@ def compare(page, block):
     log = []
     for i in range(len(page)):
         if page[i] != block[i]:
-            log.append('Verification Failure: \npage[{}] = {} \nblock[{}] = {}'.format(i, page[i], i, block[i]))
+            log.append('Verification Failure: page[{}] != block[{}]'.format(i,i))
+            for j in range(len(page[i])):
+                if page[i][j] != block[i][j]:
+                    log.append('Failed at page[{}][{}] != block [{}][{}] ### ( {} != {} ) ### '.format(i, j, i, j, page[i][j], block[i][j]))            
     return log
 
 
@@ -263,7 +266,6 @@ def AVR_ISP(ip, port, hex_data):
         flashPage(hex_data[i], logs)
         IncreaseAddress(addr)
     Page = readPage(add_count)
-    logs.append(Page)
     logs += compare(Page, hex_data)
     logs.append('Universal')
     logs.append(universal())
