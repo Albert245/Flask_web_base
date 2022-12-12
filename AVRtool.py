@@ -288,6 +288,7 @@ def AVR_ISP(ip, port, hex_data):
     logs += compare(Page, hex_data)
     # logs.append('Universal')
     # logs.append(universal())
+    time.sleep(0.3)
     logs.append('Exit Programming mode')
     logs.append(exProgMode())
     time.sleep(0.3)
