@@ -252,6 +252,8 @@ def compare(page, block):
 
 
 def AVR_ISP(ip, port, hex_data):
+    global s
+    s = socket.socket()
     logs = []
     addr = [0x00, 0x00]
     add_count = len(hex_data)
