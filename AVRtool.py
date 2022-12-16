@@ -212,7 +212,7 @@ def IncreaseAddress(addr):
     return addr
 
 
-def loadAddress(addr, log):
+def loadAddress(addr):
     head = [0x55]
     tail = [0x20]
     load_addr = head + addr + tail
@@ -229,9 +229,8 @@ def readPage(count):
     read_addr = [0x00 ,0x00]
     cmd = [0x74, 0x00, 0x80, 0x46, 0x20]
     read_page =[]
-    log = []
     for i in range(count):
-        loadAddress(read_addr,log)
+        loadAddress(read_addr)
         page_raw = sendByte(cmd)
         read_page.append(page_raw[1:-1:1])
         IncreaseAddress(read_addr)
