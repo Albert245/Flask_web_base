@@ -71,6 +71,6 @@ def upload():
                 del page, Block
                 return log
         except:
-            return 'Not allowed.'
+            return 'Not allowed'
         del log
     return render_template('upload.html')
