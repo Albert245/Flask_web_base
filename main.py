@@ -93,7 +93,7 @@ class MyWorker():
     thread.start()
 
   def run(self):
-    logging.info(f'run MyWorker with parameter {self.message}')
+    # logging.info(f'run MyWorker with parameter {self.message}')
     global TCP_IP
     TCP_IP =  '113.172.96.69'
     global TCP_PORT
