@@ -56,7 +56,6 @@ def upload():
     global TCP_PORT
     TCP_PORT = 328
     if request.method == 'POST':
-        log =[]
         try:
             
             file = request.files['uploadfile']
@@ -71,10 +70,10 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = DP.convert_hex_file(Block)
-                log.append(AVR.AVR_ISP(TCP_IP,TCP_PORT,page))
-                del page, Block
+                log = AVR.AVR_ISP(TCP_IP,TCP_PORT,page)
+                
                 return log
         except:
             return 'Not allowed'
-        del log
+        
     return render_template('upload.html')
