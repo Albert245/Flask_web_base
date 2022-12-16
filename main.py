@@ -84,8 +84,7 @@ def upload():
 
 class MyWorker():
 
-  def __init__(self, message, page):
-    self.message = message
+  def __init__(self, page):
     self.page = page
 
     thread = threading.Thread(target=self.run, args=())
