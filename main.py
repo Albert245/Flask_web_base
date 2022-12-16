@@ -81,12 +81,11 @@ def upload():
 class MyWorker():
 
   def __init__(self, page):
-
-    self.page = page
-
-    thread = threading.Thread(target=self.run, args=())
-    thread.daemon = True
-    thread.start()
+    with app.app_context():
+        self.page = page
+        thread = threading.Thread(target=self.run, args=())
+        thread.daemon = True
+        thread.start()
 
   def run(self):
     with app.app_context():
