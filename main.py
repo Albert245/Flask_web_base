@@ -4,6 +4,7 @@ import DataProcess as DP
 import pyfirebase as base
 import AVRtool as AVR
 import time
+import threading
 
 
 
@@ -71,11 +72,30 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = DP.convert_hex_file(Block)
-                log = AVR.AVR_ISP(TCP_IP,TCP_PORT,page)
-                log.append("--- %s seconds ---" % (time.time() - start_time))
-                logs = "".join(str(log))
-                return logs
+                # log = AVR.AVR_ISP(TCP_IP,TCP_PORT,page)
+                # log.append("--- %s seconds ---" % (time.time() - start_time))
+                # logs = "".join(str(log))
+                MyWorker(page)
+                return 'Loading'
         except:
             return 'Not allowed'
         
     return render_template('upload.html')
+
+class MyWorker():
+
+  def __init__(self, message, page):
+    self.message = message
+    self.page = page
+
+    thread = threading.Thread(target=self.run, args=())
+    thread.daemon = True
+    thread.start()
+
+  def run(self):
+    logging.info(f'run MyWorker with parameter {self.message}')
+    global TCP_IP
+    TCP_IP =  '113.172.96.69'
+    global TCP_PORT
+    TCP_PORT = 328
+    AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
