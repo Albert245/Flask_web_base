@@ -51,6 +51,10 @@ def create():
 
 @app.route('/upload', methods = ('GET','POST'))
 def upload():
+    global TCP_IP
+    TCP_IP =  '113.172.96.69'
+    global TCP_PORT
+    TCP_PORT = 328
     if request.method == 'POST':
         log =[]
         try:
