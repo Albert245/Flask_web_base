@@ -119,8 +119,8 @@ def hexConvert(lists):
         list_out.append(hex(lists[i]))
     return list_out
 
-def start_prog(ip ,port):
-    s.connect((ip ,port))
+def start_prog(ip, port):
+    s.connect((ip, port))
 
 def end_prog():
     s.close()
@@ -187,6 +187,7 @@ def getSignature():
 
 # Universal:
 def universal():
+    # head = [0x56, 0x30, 0x00, 0x00, 0x00, 0x20]
     head = [0x56]
     tail = [0x00, 0x20]
     cmd = [[0x30, 0x00, 0x00], [0x30, 0x00, 0x01], [0x30, 0x00, 0x02], [0xac, 0x80, 0x00]]
@@ -241,7 +242,7 @@ def compare(page, block):
     log = []
     for i in range(len(page)):
         if page[i] != block[i]:
-            log.append('Verification Error: page[{}] != block[{}] #############{} ====> {}##############'.format(i,i,page[i],block[i]))
+            log.append('Verification Error: page[{}] != block[{}]'.format(i,i))
             for j in range(len(page[i])):
                 if page[i][j] != block[i][j]:
                     log.append('First mismatch at byte {} :  {} != {} '.format(i*128+j, hex(page[i][j]), hex(block[i][j])))
@@ -259,37 +260,26 @@ def AVR_ISP(ip, port, hex_data):
     start_prog(ip, port)
     logs.append('get Sync')
     logs.append(hexConvert(getSync()))
-    time.sleep(0.2)
     logs.append('Get parameter')
     logs.append(getParameter(1))
-    time.sleep(0.2)
     logs.append('set prog')
     logs.append(hexConvert(setProg()))
-    time.sleep(0.2)
     logs.append('set ProgEx')
     logs.append(hexConvert(setProgEx()))
-    time.sleep(0.2)
     logs.append('Universal')
     logs.append(universal())
-    time.sleep(0.2)
     logs.append('Get parameter')
     logs.append(getParameter(2))
-    time.sleep(0.2)
     logs.append('set prog')
     logs.append(hexConvert(setProg()))
-    time.sleep(0.2)
     logs.append('set ProgEx')
     logs.append(hexConvert(setProgEx()))
-    time.sleep(0.2)
     logs.append('Enter Programming mode')
     logs.append(hexConvert(enterProgMode()))
-    time.sleep(0.2)
     logs.append('Get system signature: ')
     logs.append(getSignature())
-    time.sleep(0.2)
     logs.append('Universal')
     logs.append(universal())
-    time.sleep(0.2)
 
     for i in range(len(hex_data)):
         logs.append('Flash page at address: {}  {}'.format(hex(addr[0]),hex(addr[1])))
@@ -300,10 +290,7 @@ def AVR_ISP(ip, port, hex_data):
     logs += compare(Page, hex_data)
     # logs.append('Universal')
     # logs.append(universal())
-    time.sleep(0.3)
     logs.append('Exit Programming mode')
     logs.append(exProgMode())
-    time.sleep(0.3)
     end_prog()
-    time.sleep(0.2)
     return logs
