@@ -73,7 +73,8 @@ def upload():
                 page = DP.convert_hex_file(Block)
                 log = AVR.AVR_ISP(TCP_IP,TCP_PORT,page)
                 log.append("--- %s seconds ---" % (time.time() - start_time))
-                return log
+                logs = "\n".join(log)
+                return logs
         except:
             return 'Not allowed'
         
