@@ -17,10 +17,10 @@ app.config['ALLOWED_EXTENSIONS'] = {'.hex'}
 # app.config['SERVER_NAME'] = 'https://esp8266-avrisp.herokuapp.com'
 
 
-messages = [{'title': 'Message One',
-             'content': 'Message One Content'},
-            {'title': 'Message Two',
-             'content': 'Message Two Content'}
+messages = [{'title': 'Debug Terminal',
+             'content': 'Below are debug output'},
+            {'title': 'TCP/IP',
+             'content': '113.172.96.69:328'}
             ]
 
 # ...
@@ -95,7 +95,9 @@ class MyWorker():
         global TCP_PORT
         TCP_PORT = 328
         global messages
+        start_time = time.time()
         log = AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
-        msg = "".join(str(log))
-        messages.append({'title': 'DEBUG', 'content' : msg})
+        for i in range(0,len(log),2):
+            messages.append({'title': log[i], 'content' : log[i+1]})
+        messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
         # return redirect(url_for("upload"))
