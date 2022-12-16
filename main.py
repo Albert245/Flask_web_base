@@ -3,6 +3,7 @@ import os
 import DataProcess as DP
 import pyfirebase as base
 import AVRtool as AVR
+import time
 
 
 
@@ -57,7 +58,7 @@ def upload():
     TCP_PORT = 328
     if request.method == 'POST':
         try:
-            
+            start_time = time.time()
             file = request.files['uploadfile']
             # file_base_name = os.path.basename(file.filename)
             extension = os.path.splitext(file.filename)[1]
@@ -71,7 +72,7 @@ def upload():
                     
                 page = DP.convert_hex_file(Block)
                 log = AVR.AVR_ISP(TCP_IP,TCP_PORT,page)
-                
+                log.append("--- %s seconds ---" % (time.time() - start_time))
                 return log
         except:
             return 'Not allowed'
