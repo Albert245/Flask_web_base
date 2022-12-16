@@ -81,6 +81,7 @@ def upload():
 class MyWorker():
 
   def __init__(self, page):
+
     self.page = page
 
     thread = threading.Thread(target=self.run, args=())
@@ -88,10 +89,10 @@ class MyWorker():
     thread.start()
 
   def run(self):
-    # logging.info(f'run MyWorker with parameter {self.message}')
-    global TCP_IP
-    TCP_IP =  '113.172.96.69'
-    global TCP_PORT
-    TCP_PORT = 328
-    AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
+    with app.app_context():
+        global TCP_IP
+        TCP_IP =  '113.172.96.69'
+        global TCP_PORT
+        TCP_PORT = 328
+        AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
     return redirect(url_for("upload"))
