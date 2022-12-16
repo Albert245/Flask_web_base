@@ -222,7 +222,7 @@ def flashPage(data, log):
     head = [0x64, 0x00, 0x80,0x46]
     tail = [0x20]
     flash_page = head + data + tail
-    return sendByte(flash_page, log)
+    return excCmd(flash_page, log)
 
 # Read page on microchip
 def readPage(count):
