@@ -94,5 +94,8 @@ class MyWorker():
         TCP_IP =  '113.172.96.69'
         global TCP_PORT
         TCP_PORT = 328
-        AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
+        global messages
+        log = AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
+        msg = "".join(str(log))
+        messages.append({'title': 'DEBUG', 'content' : msg})
         # return redirect(url_for("upload"))
