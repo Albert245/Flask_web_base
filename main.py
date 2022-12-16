@@ -20,7 +20,7 @@ app.config['ALLOWED_EXTENSIONS'] = {'.hex'}
 messages = [{'title': 'Debug Terminal',
              'content': 'Below are debug output'},
             {'title': 'TCP/IP',
-             'content': '113.172.96.69:328'}
+             'content': '113.172.96.69 : 328'}
             ]
 
 # ...

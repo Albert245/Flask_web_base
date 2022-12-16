@@ -216,13 +216,13 @@ def loadAddress(addr, log):
     head = [0x55]
     tail = [0x20]
     load_addr = head + addr + tail
-    return excCmd(load_addr,log)
+    return sendByte(load_addr)
 
-def flashPage(data):
+def flashPage(data, log):
     head = [0x64, 0x00, 0x80,0x46]
     tail = [0x20]
     flash_page = head + data + tail
-    return sendByte(flash_page)
+    return sendByte(flash_page, log)
 
 # Read page on microchip
 def readPage(count):
@@ -294,8 +294,8 @@ def AVR_ISP(ip, port, hex_data):
 
     for i in range(len(hex_data)):
         logs.append('Flash page at address: {}  {}'.format(hex(addr[0]),hex(addr[1])))
-        loadAddress(addr,logs)
-        flashPage(hex_data[i])
+        logs.append(loadAddress(addr))
+        flashPage(hex_data[i], logs)
         IncreaseAddress(addr)
     Page = readPage(add_count)
     logs += compare(Page, hex_data)
