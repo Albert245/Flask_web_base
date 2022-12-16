@@ -53,13 +53,9 @@ def create():
 
 @app.route('/upload', methods = ('GET','POST'))
 def upload():
-    global TCP_IP
-    TCP_IP =  '113.172.96.69'
-    global TCP_PORT
-    TCP_PORT = 328
     if request.method == 'POST':
         try:
-            start_time = time.time()
+            # start_time = time.time()
             file = request.files['uploadfile']
             # file_base_name = os.path.basename(file.filename)
             extension = os.path.splitext(file.filename)[1]
@@ -98,4 +94,4 @@ class MyWorker():
     global TCP_PORT
     TCP_PORT = 328
     AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
-    redirect(url_for("upload"))
+    return redirect(url_for("upload"))
