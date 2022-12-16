@@ -94,4 +94,4 @@ class MyWorker():
         global TCP_PORT
         TCP_PORT = 328
         AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
-    return redirect(url_for("upload"))
+        return redirect(url_for("upload"))
