@@ -187,7 +187,6 @@ def getSignature():
 
 # Universal:
 def universal():
-    head = [0x56, 0x30, 0x00, 0x00, 0x00, 0x20]
     head = [0x56]
     tail = [0x00, 0x20]
     cmd = [[0x30, 0x00, 0x00], [0x30, 0x00, 0x01], [0x30, 0x00, 0x02], [0xac, 0x80, 0x00]]
@@ -260,26 +259,37 @@ def AVR_ISP(ip, port, hex_data):
     start_prog(ip, port)
     logs.append('get Sync')
     logs.append(hexConvert(getSync()))
+    time.sleep(0.1)
     logs.append('Get parameter')
     logs.append(getParameter(1))
+    time.sleep(0.1)
     logs.append('set prog')
     logs.append(hexConvert(setProg()))
+    time.sleep(0.1)
     logs.append('set ProgEx')
     logs.append(hexConvert(setProgEx()))
+    time.sleep(0.1)
     logs.append('Universal')
     logs.append(universal())
+    time.sleep(0.1)
     logs.append('Get parameter')
     logs.append(getParameter(2))
+    time.sleep(0.1)
     logs.append('set prog')
     logs.append(hexConvert(setProg()))
+    time.sleep(0.1)
     logs.append('set ProgEx')
     logs.append(hexConvert(setProgEx()))
+    time.sleep(0.1)
     logs.append('Enter Programming mode')
     logs.append(hexConvert(enterProgMode()))
+    time.sleep(0.1)
     logs.append('Get system signature: ')
     logs.append(getSignature())
+    time.sleep(0.1)
     logs.append('Universal')
     logs.append(universal())
+    time.sleep(0.1)
 
     for i in range(len(hex_data)):
         logs.append('Flash page at address: {}  {}'.format(hex(addr[0]),hex(addr[1])))
