@@ -14,7 +14,7 @@ app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 1024*32
 app.config['SECRET_KEY'] = '1709'
 app.config['ALLOWED_EXTENSIONS'] = {'.hex'}
-app.config['SERVER_NAME'] = 'https://esp8266-avrisp.herokuapp.com'
+# app.config['SERVER_NAME'] = 'https://esp8266-avrisp.herokuapp.com'
 
 
 messages = [{'title': 'Message One',
@@ -95,4 +95,4 @@ class MyWorker():
         global TCP_PORT
         TCP_PORT = 328
         AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
-        return redirect(url_for("upload"))
+        # return redirect(url_for("upload"))
