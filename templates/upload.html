@@ -4,20 +4,18 @@
    <html>
    <body>
       <form action="/upload" method="post" enctype="multipart/form-data">
-         <label for="title">Title</label>
+         <label for="TCP">TCP/IP</label>
          <br>
-         <input type="text" name="title"
-                  placeholder="Message title"
-                  value="{{ request.form['title'] }}"></input>
+         <input type="text" name="TCP"
+                  placeholder="TCP/IP"
+                  value="{{ request.form['TCP'] }}"></input>
          <br>
 
-         <label for="content">Message Content</label>
+         <label for="Port">Port</label>
          <br>
-         <textarea name="content"
-                     placeholder="Message content"
-                     rows="15"
-                     cols="60"
-                     >{{ request.form['content'] }}</textarea>
+         <textarea name="Port"
+                     placeholder="default is 328"
+                     >{{ request.form['Port'] }}</textarea>
          <br>
          <input type="file" name="uploadfile">
          <input type="submit" value="Upload">

@@ -5,6 +5,7 @@ import pyfirebase as base
 import AVRtool as AVR
 import time
 import threading
+from flask_socketio import SocketIO
 
 
 
@@ -22,6 +23,8 @@ messages = [{'title': 'Debug Terminal',
             {'title': 'TCP/IP',
              'content': '113.172.96.69 : 328'}
             ]
+
+debug_log = ''
 
 # ...
 
