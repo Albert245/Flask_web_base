@@ -76,6 +76,7 @@ def upload():
             if AVR_type == "Default":
                 TCP_IP =  '113.172.96.69'
                 TCP_PORT = 328
+            messages[1]['content'] = TCP_IP + ' : ' + str(TCP_PORT)
             extension = os.path.splitext(file.filename)[1]
             # realpath = os.path.realpath(file.filename)
             Block = []
