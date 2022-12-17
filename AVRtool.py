@@ -151,11 +151,11 @@ def getParameter(mode):
     if mode == 1:
         for p in param1:
             cmd[1] = p
-            log.append(sendByte(cmd))
+            log.append(hexConvert(sendByte(cmd)))
     if mode == 2:
         for p in param2:
             cmd[1] = p
-            log.append(sendByte(cmd))
+            log.append(hexConvert(sendByte(cmd)))
     return log
 
 # set Device
@@ -194,7 +194,7 @@ def universal():
     log = []
     for i in cmd:
         cmd_config = head + i + tail
-        log.append(sendByte(cmd_config))
+        log.append(hexConvert(sendByte(cmd_config)))
     return log
 
 
@@ -293,7 +293,7 @@ def AVR_ISP(ip, port, hex_data):
 
     for i in range(len(hex_data)):
         logs.append('Flash page at address: {}  {}'.format(hex(addr[0]),hex(addr[1])))
-        logs.append(loadAddress(addr))
+        logs.append(hexConvert(loadAddress(addr)))
         flashPage(hex_data[i], logs)
         IncreaseAddress(addr)
     Page = readPage(add_count)
