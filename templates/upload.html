@@ -4,6 +4,21 @@
    <html>
    <body>
       <form action="/upload" method="post" enctype="multipart/form-data">
+         <label for="title">Title</label>
+         <br>
+         <input type="text" name="title"
+                  placeholder="Message title"
+                  value="{{ request.form['title'] }}"></input>
+         <br>
+
+         <label for="content">Message Content</label>
+         <br>
+         <textarea name="content"
+                     placeholder="Message content"
+                     rows="15"
+                     cols="60"
+                     >{{ request.form['content'] }}</textarea>
+         <br>
          <input type="file" name="uploadfile">
          <input type="submit" value="Upload">
       </form>
