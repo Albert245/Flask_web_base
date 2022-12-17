@@ -58,10 +58,24 @@ def create():
 @app.route('/upload', methods = ('GET','POST'))
 def upload():
     if request.method == 'POST':
+        global TCP_IP
+        global TCP_PORT
         try:
-            # start_time = time.time()
             file = request.files['uploadfile']
-            # file_base_name = os.path.basename(file.filename)
+            IP = request.form['TCP']
+            Port = request.form['Port']
+            AVR_type = request.form['F_type']
+            if AVR_type == "Custom":
+                if not IP:
+                    IP = TCP_IP
+                elif not Port:
+                    Port = TCP_PORT
+                else:
+                    TCP_IP = IP
+                    TCP_PORT = Port
+            if AVR_type == "Default":
+                TCP_IP =  '113.172.96.69'
+                TCP_PORT = 328
             extension = os.path.splitext(file.filename)[1]
             # realpath = os.path.realpath(file.filename)
             Block = []
@@ -72,9 +86,6 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = DP.convert_hex_file(Block)
-                # log = AVR.AVR_ISP(TCP_IP,TCP_PORT,page)
-                # log.append("--- %s seconds ---" % (time.time() - start_time))
-                # logs = "".join(str(log))
                 MyWorker(page)
                 return 'Loading'
         except:
@@ -94,9 +105,7 @@ class MyWorker():
   def run(self):
     with app.app_context():
         global TCP_IP
-        TCP_IP =  '113.172.96.69'
         global TCP_PORT
-        TCP_PORT = 328
         global messages
         start_time = time.time()
         log = AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)

@@ -3,19 +3,24 @@
 {% block content %}
    <html>
    <body>
+      <p>Initalize AVR Flash</p>
       <form action="/upload" method="post" enctype="multipart/form-data">
+         <input type="radio" id="Default" name="F_type" value="Default">
+         <label for="Default">Default TCP/IP address</label><br>
+         <input type="radio" id="Custom" name="F_type" value="Custom">
+         <label for="Custom">Custom TCP/IP address</label><br>
          <label for="TCP">TCP/IP</label>
          <br>
          <input type="text" name="TCP"
-                  placeholder="TCP/IP"
+                  placeholder="Target TCP/IP. Default is 113.172.96.69"
                   value="{{ request.form['TCP'] }}"></input>
          <br>
 
          <label for="Port">Port</label>
          <br>
-         <textarea name="Port"
-                     placeholder="default is 328"
-                     >{{ request.form['Port'] }}</textarea>
+         <input type="text" name="Port"
+                  placeholder="Port (Ex: 80). Default is 328"
+                  value="{{ request.form['Port'] }}"></input>
          <br>
          <input type="file" name="uploadfile">
          <input type="submit" value="Upload">
