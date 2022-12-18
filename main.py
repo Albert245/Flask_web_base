@@ -5,7 +5,8 @@ import pyfirebase as base
 import AVRtool as AVR
 import time
 import threading
-from flask_socketio import SocketIO
+# from flask_socketio import SocketIO
+import webbrowser
 
 
 
@@ -113,4 +114,5 @@ class MyWorker():
         for i in range(0,len(log),2):
             messages.append({'title': log[i], 'content' : log[i+1]})
         messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
-        return render_template('index.html', messages=messages)
+        return webbrowser.open_new_tab('https://esp8266-avrisp.herokuapp.com')
+
