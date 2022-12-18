@@ -7,6 +7,7 @@ import time
 import threading
 from flask_socketio import SocketIO
 from rq import Worker, Queue, Connection
+from worker import conn
 #====
 
 
