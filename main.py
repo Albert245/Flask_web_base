@@ -15,7 +15,7 @@ app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 1024*32
 app.config['SECRET_KEY'] = '1709'
 app.config['ALLOWED_EXTENSIONS'] = {'.hex'}
-# app.config['SERVER_NAME'] = 'esp8266-avrisp.herokuapp.com'
+app.config['SERVER_NAME'] = 'esp8266-avrisp.herokuapp.com'
 
 
 messages = [{'title': 'Debug Terminal',
