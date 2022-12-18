@@ -12,32 +12,6 @@ from rq import Worker, Queue, Connection
 import requests
 
 
-listen = ['high', 'default', 'low']
-
-redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379')
-
-conn = redis.from_url(redis_url)
-
-if __name__ == '__main__':
-    with Connection(conn):
-        worker = Worker(map(Queue, listen))
-        worker.work()
-
-def task():
-    with app.app_context():
-        global TCP_IP
-        global TCP_PORT
-        global messages
-        start_time = time.time()
-        log = AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
-        for i in range(0,len(log),2):
-            messages.append({'title': log[i], 'content' : log[i+1]})
-        messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
-
-
-
-#====
-
 
 
 # ...
@@ -60,7 +34,7 @@ debug_log = ''
 
 TCP_IP =  '113.172.96.69'
 TCP_PORT = 328
-
+page = []
 # ...
 
 @app.route('/')
@@ -115,7 +89,7 @@ def upload():
                     return 'Not a hex file'
                 for line in file.readlines():
                     Block.append(str(line.rstrip()))
-                    
+                global page
                 page = DP.convert_hex_file(Block)
                 # MyWorker(page)
                 q = Queue(connection=conn)
@@ -148,3 +122,31 @@ class MyWorker():
             messages.append({'title': log[i], 'content' : log[i+1]})
         messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
         return redirect("esp8266-avrisp.herokuapp.com")
+
+
+listen = ['high', 'default', 'low']
+
+redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379')
+
+conn = redis.from_url(redis_url)
+
+if __name__ == '__main__':
+    with Connection(conn):
+        worker = Worker(map(Queue, listen))
+        worker.work()
+
+def task():
+    with app.app_context():
+        global TCP_IP
+        global TCP_PORT
+        global messages
+        global page
+        start_time = time.time()
+        log = AVR.AVR_ISP(TCP_IP,TCP_PORT,page)
+        for i in range(0,len(log),2):
+            messages.append({'title': log[i], 'content' : log[i+1]})
+        messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
+
+
+
+#====
