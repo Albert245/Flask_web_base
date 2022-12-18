@@ -102,6 +102,8 @@ class MyWorker():
         thread = threading.Thread(target=self.run, args=())
         thread.daemon = True
         thread.start()
+        thread.join()
+        return redirect("esp8266-avrisp.herokuapp.com")
 
   def run(self):
     with app.app_context():
