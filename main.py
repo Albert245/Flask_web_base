@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, flash, redirect
+from flask import Flask, render_template, request, url_for, flash, redirect, render_template_string
 import os
 import DataProcess as DP
 import pyfirebase as base
@@ -7,12 +7,15 @@ import time
 import threading
 from flask_socketio import SocketIO
 from rq import Worker, Queue, Connection
+from rq.job import Job
+from redis import Redis
 from worker import conn
 import requests
 #====
 
 
-
+r = Redis(host='redisserver')
+q = Queue(connection=r)
 
 
 # ...
@@ -93,13 +96,25 @@ def upload():
                 global page
                 page = DP.convert_hex_file(Block)
                 # MyWorker(page)
-                q = Queue(connection=conn)
-                result = q.enqueue(count_words_at_url, 'http://heroku.com')
-                return 'Loading'
+                # q = Queue(connection=conn)
+                # result = q.enqueue(count_words_at_url, 'http://heroku.com')
+                job = q.enqueue(task)
+                return redirect(url_for('result', id=job.id))
         except:
             return 'Not allowed'
         
     return render_template('upload.html')
+
+@app.route('/result/<string:id>')
+def result(id):
+    job = Job.fetch(id, connection=r)
+    status = job.get_status()
+    if status in ['queued', 'started', 'deferred', 'failed']:
+        return get_template(status, refresh=True)
+    elif status == 'finished':
+        result = job.result 
+        # If this is a string, we can simply return it:
+        return get_template(result)
 
 class MyWorker():
 
@@ -126,7 +141,7 @@ class MyWorker():
 
 
 
-def task(url):
+def task():
     with app.app_context():
         global TCP_IP
         global TCP_PORT
@@ -144,3 +159,14 @@ def count_words_at_url(url):
     return len(resp.text.split())
 
 #====
+template_str='''<html>
+    <head>
+      {% if refresh %}
+        <meta http-equiv="refresh" content="5">
+      {% endif %}
+    </head>
+    <body>{{result}}</body>
+    </html>'''
+
+def get_template(data, refresh=False):
+    return render_template_string(template_str, result=data, refresh=refresh)
