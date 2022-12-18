@@ -116,8 +116,7 @@ class MyWorker():
         messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
         with open('log.txt','w') as f:
             f.write(str(time.time()))
-            for i in log:
-                f.write(str(log[i]))
+            f.write("".join(log))
             f.write(str(time.time()))
         return send_file('log.txt', as_attachment=True)
         # return redirect(url_for("upload"))
