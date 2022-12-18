@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, flash, redirect, render_template_string
+from flask import Flask, render_template, request, url_for, flash, redirect, send_file
 import os
 import DataProcess as DP
 import pyfirebase as base
@@ -6,16 +6,8 @@ import AVRtool as AVR
 import time
 import threading
 from flask_socketio import SocketIO
-from rq import Worker, Queue, Connection
-from rq.job import Job
-from redis import Redis
-from worker import conn
-import requests
-#====
 
 
-r = Redis(host='redisserver')
-q = Queue(connection=r)
 
 
 # ...
@@ -23,7 +15,7 @@ app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 1024*32
 app.config['SECRET_KEY'] = '1709'
 app.config['ALLOWED_EXTENSIONS'] = {'.hex'}
-app.config['SERVER_NAME'] = 'esp8266-avrisp.herokuapp.com'
+# app.config['SERVER_NAME'] = 'https://esp8266-avrisp.herokuapp.com'
 
 
 messages = [{'title': 'Debug Terminal',
@@ -38,7 +30,7 @@ debug_log = ''
 
 TCP_IP =  '113.172.96.69'
 TCP_PORT = 328
-page = []
+
 # ...
 
 @app.route('/')
@@ -93,28 +85,15 @@ def upload():
                     return 'Not a hex file'
                 for line in file.readlines():
                     Block.append(str(line.rstrip()))
-                global page
+                    
                 page = DP.convert_hex_file(Block)
-                # MyWorker(page)
-                # q = Queue(connection=conn)
-                # result = q.enqueue(count_words_at_url, 'http://heroku.com')
-                job = q.enqueue(task)
-                return redirect(url_for('result', id=job.id))
+                MyWorker(page)
+
+                return 'Loading'
         except:
             return 'Not allowed'
         
     return render_template('upload.html')
-
-@app.route('/result/<string:id>')
-def result(id):
-    job = Job.fetch(id, connection=r)
-    status = job.get_status()
-    if status in ['queued', 'started', 'deferred', 'failed']:
-        return get_template(status, refresh=True)
-    elif status == 'finished':
-        result = job.result 
-        # If this is a string, we can simply return it:
-        return get_template(result)
 
 class MyWorker():
 
@@ -124,8 +103,6 @@ class MyWorker():
         thread = threading.Thread(target=self.run, args=())
         thread.daemon = True
         thread.start()
-        thread.join()
-        return redirect("esp8266-avrisp.herokuapp.com")
 
   def run(self):
     with app.app_context():
@@ -137,36 +114,10 @@ class MyWorker():
         for i in range(0,len(log),2):
             messages.append({'title': log[i], 'content' : log[i+1]})
         messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
-        return redirect("esp8266-avrisp.herokuapp.com")
-
-
-
-def task():
-    with app.app_context():
-        global TCP_IP
-        global TCP_PORT
-        global messages
-        global page
-        start_time = time.time()
-        log = AVR.AVR_ISP(TCP_IP,TCP_PORT,page)
-        for i in range(0,len(log),2):
-            messages.append({'title': log[i], 'content' : log[i+1]})
-        messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
-        return redirect("esp8266-avrisp.herokuapp.com")
-
-def count_words_at_url(url):
-    resp = requests.get(url)
-    return len(resp.text.split())
-
-#====
-template_str='''<html>
-    <head>
-      {% if refresh %}
-        <meta http-equiv="refresh" content="5">
-      {% endif %}
-    </head>
-    <body>{{result}}</body>
-    </html>'''
-
-def get_template(data, refresh=False):
-    return render_template_string(template_str, result=data, refresh=refresh)
+        with open('log.txt',w) as f:
+            f.write(str(time.time()))
+            for i in log:
+                f.write(str(log[i]))
+            f.write(str(time.time()))
+        return send_file('log.txt', as_attachment=True)
+        # return redirect(url_for("upload"))
