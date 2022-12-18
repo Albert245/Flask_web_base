@@ -5,8 +5,7 @@ import pyfirebase as base
 import AVRtool as AVR
 import time
 import threading
-# from flask_socketio import SocketIO
-import webbrowser
+from flask_socketio import SocketIO
 
 
 
@@ -16,7 +15,7 @@ app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 1024*32
 app.config['SECRET_KEY'] = '1709'
 app.config['ALLOWED_EXTENSIONS'] = {'.hex'}
-# app.config['SERVER_NAME'] = 'https://esp8266-avrisp.herokuapp.com'
+app.config['SERVER_NAME'] = 'https://esp8266-avrisp.herokuapp.com'
 
 
 messages = [{'title': 'Debug Terminal',
@@ -114,5 +113,4 @@ class MyWorker():
         for i in range(0,len(log),2):
             messages.append({'title': log[i], 'content' : log[i+1]})
         messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
-        return webbrowser.open_new_tab('https://esp8266-avrisp.herokuapp.com')
-
+        return redirect(url_for("upload"))
