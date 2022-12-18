@@ -8,6 +8,7 @@ import threading
 from flask_socketio import SocketIO
 from rq import Worker, Queue, Connection
 from worker import conn
+import requests
 #====
 
 
@@ -93,7 +94,7 @@ def upload():
                 page = DP.convert_hex_file(Block)
                 # MyWorker(page)
                 q = Queue(connection=conn)
-                result = q.enqueue(task, 'esp8266-avrisp.herokuapp.com')
+                result = q.enqueue(count_words_at_url, 'http://heroku.com')
                 return 'Loading'
         except:
             return 'Not allowed'
@@ -138,6 +139,8 @@ def task(url):
         messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
         return redirect("esp8266-avrisp.herokuapp.com")
 
-
+def count_words_at_url(url):
+    resp = requests.get(url)
+    return len(resp.text.split())
 
 #====
