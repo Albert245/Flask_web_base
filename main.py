@@ -114,7 +114,7 @@ class MyWorker():
         for i in range(0,len(log),2):
             messages.append({'title': log[i], 'content' : log[i+1]})
         messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
-        with open('log.txt',w) as f:
+        with open('log.txt','w') as f:
             f.write(str(time.time()))
             for i in log:
                 f.write(str(log[i]))
