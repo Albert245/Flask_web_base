@@ -125,7 +125,7 @@ class MyWorker():
 
 
 
-def task():
+def task(url):
     with app.app_context():
         global TCP_IP
         global TCP_PORT
