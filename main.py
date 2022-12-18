@@ -136,6 +136,7 @@ def task(url):
         for i in range(0,len(log),2):
             messages.append({'title': log[i], 'content' : log[i+1]})
         messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
+        return redirect("esp8266-avrisp.herokuapp.com")
 
 
 
