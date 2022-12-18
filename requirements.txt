@@ -3,3 +3,4 @@ gunicorn
 cgi-tools
 pyrebase4
 flask_socketio
+rq
