@@ -87,9 +87,10 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = DP.convert_hex_file(Block)
-                MyWorker(page)
-
-                return 'Loading'
+                # MyWorker(page)
+                with open('log1.txt','w') as f:
+                    f.write(str(time.time()))
+            return send_file('log1.txt', as_attachment=True)
         except:
             return 'Not allowed'
         
