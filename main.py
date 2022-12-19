@@ -5,7 +5,7 @@ import pyfirebase as base
 import AVRtool as AVR
 import time
 import threading
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 
 
 
@@ -32,10 +32,10 @@ TCP_IP =  '113.172.96.69'
 TCP_PORT = 328
 
 # ...
-
+socketio = SocketIO(app)
 ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
 if __name__ == '__main__':
-    app.run()
+    socketio.run(app)
 
 @app.route('/')
 def index():
@@ -91,10 +91,8 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = DP.convert_hex_file(Block)
-                MyWorker(page)
-                # with open('log1.txt','w') as f:
-                #     f.write(str(time.time()))
-            return 'Wait a minute'
+                # MyWorker(page)
+            return render_template('about.html')
         except:
             return 'Not allowed'
         
@@ -126,3 +124,13 @@ class MyWorker():
         # app.app_context().push()
         # return send_file('log.txt', as_attachment=True)
         # return redirect(url_for("upload"))
+
+@socketio.on('realtime')
+def realtime():
+    global TCP_IP
+    global TCP_PORT
+    global messages
+    while True:
+        time.sleep(2)
+        a = time.time()
+        emit('times',a, broadcast=True)
