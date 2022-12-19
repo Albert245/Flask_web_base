@@ -12,7 +12,6 @@ from flask_socketio import SocketIO
 
 # ...
 app = Flask(__name__)
-app.app_context().push()
 app.config['MAX_CONTENT_LENGTH'] = 1024*32
 app.config['SECRET_KEY'] = '1709'
 app.config['ALLOWED_EXTENSIONS'] = {'.hex'}
@@ -120,5 +119,6 @@ class MyWorker():
             f.write(str(time.time()))
             # f.write("".join(log))
             f.write(str(time.time()))
+        app.app_context().push()
         return send_file('log.txt', as_attachment=True)
         # return redirect(url_for("upload"))
