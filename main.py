@@ -1,11 +1,11 @@
-from flask import Flask, render_template, request, url_for, flash, redirect, send_file, session
+from flask import Flask, render_template, request, url_for, flash, redirect
 import os
 import DataProcess as DP
 import pyfirebase as base
 import AVRtool as AVR
 import time
-from threading import Lock
-from flask_socketio import SocketIO, emit
+import threading
+from flask_socketio import SocketIO
 
 
 
@@ -32,21 +32,11 @@ TCP_IP =  '113.172.96.69'
 TCP_PORT = 328
 
 # ...
-thread = None
-thread_lock = Lock()
-async_mode = None
-socketio = SocketIO(app, async_mode=async_mode)
-ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
-if __name__ == '__main__':
-    socketio.run(app)
 
 # @app.route('/')
 # def index():
 #     return render_template('index.html', messages=messages)
 
-@app.route('/')
-def index():
-    return render_template('about.html', async_mode=socketio.async_mode)
 # ...
 
 @app.route('/create/', methods=('GET', 'POST'))
@@ -97,87 +87,37 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = DP.convert_hex_file(Block)
-                # MyWorker(page)
-            return render_template('about.html')
-            # return 'wait'
+                MyWorker(page)
+                return 'Loading'
         except:
             return 'Not allowed'
         
     return render_template('upload.html')
 
-# class MyWorker():
+class MyWorker():
 
-#   def __init__(self, page):
-#     with app.app_context():
-#         self.page = page
-#         thread = threading.Thread(target=self.run, args=())
-#         thread.daemon = True
-#         thread.start()
+  def __init__(self, page):
+    with app.app_context():
+        self.page = page
+        thread = threading.Thread(target=self.run, args=())
+        thread.daemon = True
+        thread.start()
 
-#   def run(self):
-#     with app.app_context():
-#         global TCP_IP
-#         global TCP_PORT
-#         global messages
-#         start_time = time.time()
-#         log = AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
-#         for i in range(0,len(log),2):
-#             messages.append({'title': log[i], 'content' : log[i+1]})
-#         messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
-        
-        # with open('log.txt','w') as f:
-        #     f.write(str(time.time()))
-        #     # f.write("".join(log))
-        #     f.write(str(time.time()))
-        # app.app_context().push()
-        # return send_file('log.txt', as_attachment=True)
+  def run(self):
+    with app.app_context():
+        global TCP_IP
+        global TCP_PORT
+        global messages
+        start_time = time.time()
+        log = AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
+        for i in range(0,len(log),2):
+            messages.append({'title': log[i], 'content' : log[i+1]})
+        messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
         # return redirect(url_for("upload"))
 
-# @socketio.on('realtime')
-# def realtime():
-#     global TCP_IP
-#     global TCP_PORT
-#     global messages
-#     while True:
-#         time.sleep(2)
-#         a = time.time()
-#         emit('times',a, broadcast=True)
+headings = ('Name','Role','Salary')
+data = (("Lmao",'Engineer0',12),('Bruh','Engineer1',14),('X','Engineer2',15))
 
-url = 'https://api.coinbase.com/v2/prices/btc-usd/spot'
-
-def background_thread():
-    """Example of how to send server generated events to clients."""
-    count = 0
-    while True:
-        socketio.sleep(3)
-        count += 1
-        price = ((requests.get(url)).json())['data']['amount']
-        socketio.emit('my_response',
-                      {'data': 'Bitcoin current price (USD): ' + price, 'count': count})
-
-@socketio.event
-def my_event(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my_response',
-         {'data': message['data'], 'count': session['receive_count']})
-
-# Receive the test request from client and send back a test response
-@socketio.on('test_message')
-def handle_message(data):
-    print('received message: ' + str(data))
-    emit('test_response', {'data': 'Test response sent'})
-
-# Broadcast a message to all clients
-@socketio.on('broadcast_message')
-def handle_broadcast(data):
-    print('received: ' + str(data))
-    emit('broadcast_response', {'data': 'Broadcast sent'}, broadcast=True)
-
-@socketio.event
-def connect():
-    global thread
-    with thread_lock:
-        if thread is None:
-            thread = socketio.start_background_task(background_thread)
-    emit('my_response', {'data': 'Connected', 'count': 0})
-
+@app.route('/')
+def index():
+    return render_template('table.html', headings = headings, data=data)
