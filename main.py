@@ -33,6 +33,10 @@ TCP_PORT = 328
 
 # ...
 
+ROOT_PATH = os.path.dirname(os.path.realpath(__file__))
+if __name__ == '__main__':
+    app.run()
+
 @app.route('/')
 def index():
     return render_template('index.html', messages=messages)
@@ -115,10 +119,10 @@ class MyWorker():
         for i in range(0,len(log),2):
             messages.append({'title': log[i], 'content' : log[i+1]})
         messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
-        with open('log.txt','w') as f:
-            f.write(str(time.time()))
-            # f.write("".join(log))
-            f.write(str(time.time()))
-        app.app_context().push()
-        return send_file('log.txt', as_attachment=True)
+        # with open('log.txt','w') as f:
+        #     f.write(str(time.time()))
+        #     # f.write("".join(log))
+        #     f.write(str(time.time()))
+        # app.app_context().push()
+        # return send_file('log.txt', as_attachment=True)
         # return redirect(url_for("upload"))
