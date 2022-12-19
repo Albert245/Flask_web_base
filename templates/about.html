@@ -1,24 +1,10 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-    <head>
-	<link rel="stylesheet" href="/static/css/home.css" />
-    </head>
-    <body>
-        {% extends "header-footer.html" %}
-        {% block content %}
-
-        $(document).ready(function(){
-            var socket = io();
-            socket.on('times', function(msg) {
-                $('#log').append('<p>Received: ' + msg.data + '</p>');
-            });
-            $('form#emit').submit(function(event) {
-                socket.emit('realtime', {data: $('#emit_data').val()});
-                return false;
-            });
-            
-        });
-
-        {% endblock %}
-    </body>
-</html>
+$(document).ready(function(){
+    var socket = io();
+    socket.on('times', function(msg) {
+        $('#log').append('<p>Received: ' + msg.data + '</p>');
+    });
+    $('form#emit').submit(function(event) {
+        socket.emit('realtime', {data: $('#emit_data').val()});
+        return false;
+    });
+});

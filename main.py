@@ -92,7 +92,8 @@ def upload():
                     
                 page = DP.convert_hex_file(Block)
                 # MyWorker(page)
-            return render_template('about.html')
+            # return render_template('about.html')
+            return 'wait'
         except:
             return 'Not allowed'
         
