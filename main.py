@@ -12,6 +12,7 @@ from flask_socketio import SocketIO
 
 # ...
 app = Flask(__name__)
+app.app_context().push()
 app.config['MAX_CONTENT_LENGTH'] = 1024*32
 app.config['SECRET_KEY'] = '1709'
 app.config['ALLOWED_EXTENSIONS'] = {'.hex'}
@@ -87,10 +88,10 @@ def upload():
                     Block.append(str(line.rstrip()))
                     
                 page = DP.convert_hex_file(Block)
-                # MyWorker(page)
-                with open('log1.txt','w') as f:
-                    f.write(str(time.time()))
-            return send_file('log1.txt', as_attachment=True)
+                MyWorker(page)
+                # with open('log1.txt','w') as f:
+                #     f.write(str(time.time()))
+            return 'Wait a minute'
         except:
             return 'Not allowed'
         
