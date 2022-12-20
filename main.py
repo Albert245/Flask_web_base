@@ -33,9 +33,9 @@ TCP_PORT = 328
 
 # ...
 
-# @app.route('/')
-# def index():
-#     return render_template('index.html', messages=messages)
+@app.route('/')
+def index():
+    return render_template('index.html', messages=messages)
 
 # ...
 
@@ -88,7 +88,9 @@ def upload():
                     
                 page = DP.convert_hex_file(Block)
                 MyWorker(page)
-                return 'Loading'
+                messages.append({   'title': 'OTA state',
+                                    'content' : 'The program OTA is running in the background, please wait for a minutes'})
+                return redirect(url_for('index'))
         except:
             return 'Not allowed'
         
@@ -110,14 +112,8 @@ class MyWorker():
         global messages
         start_time = time.time()
         log = AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
+        messages.append({'title': 'Debug OTA logs', 'content' : ''})
         for i in range(0,len(log),2):
             messages.append({'title': log[i], 'content' : log[i+1]})
         messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
         # return redirect(url_for("upload"))
-
-headings = ('Name','Role','Salary')
-data = (("Lmao",'Engineer0',12),('Bruh','Engineer1',14),('X','Engineer2',15))
-
-@app.route('/')
-def index():
-    return render_template('table.html', headings = headings, data=data)
