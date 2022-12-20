@@ -24,7 +24,7 @@ messages = [{'title': 'Debug Terminal',
              'content': '113.172.96.69 : 328'}
             ]
 
-count = 1
+count = 0
 debug_log = ''
 
 # ...
@@ -37,6 +37,7 @@ TCP_PORT = 328
 @app.route('/')
 def index():
     global messages
+    time.sleep(1)
     return render_template('index.html', messages=messages)
 
 # ...
