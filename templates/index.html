@@ -1,18 +1,22 @@
 {% extends 'base.html' %}
-<style>
-    body {
-      background-image: url('/static/images/pexels-gradienta-7130466.jpg');
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-size: 100% 100%;
-    }
-    </style>
-{% block content %}
-    <h1>{% block title %} Debug {% endblock %}</h1>
-    {% for message in messages %}
-        <div class='message'>
-            <h3>{{ message['title'] }}</h3>
-            <p>{{ message['content'] }}</p>
-        </div>
-    {% endfor %}
-{% endblock %}
+<html>
+    <body>
+        <style>
+            body {
+              background-image: url('/static/images/pexels-gradienta-7130466.jpg');
+              background-repeat: no-repeat;
+              background-attachment: fixed;
+              background-size: 100% 100%;
+            }
+        </style>
+        {% block content %}
+            <h1>{% block title %} Debug {% endblock %}</h1>
+            {% for message in messages %}
+                <div class='message'>
+                    <h3>{{ message['title'] }}</h3>
+                    <p>{{ message['content'] }}</p>
+                </div>
+            {% endfor %}
+        {% endblock %}
+    </body>
+</html>
