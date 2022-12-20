@@ -24,6 +24,7 @@ messages = [{'title': 'Debug Terminal',
              'content': '113.172.96.69 : 328'}
             ]
 
+count = 1
 debug_log = ''
 
 # ...
@@ -61,6 +62,7 @@ def upload():
     if request.method == 'POST':
         global TCP_IP
         global TCP_PORT
+        global count
         try:
             file = request.files['uploadfile']
             IP = request.form['TCP']
@@ -78,6 +80,7 @@ def upload():
                 TCP_IP =  '113.172.96.69'
                 TCP_PORT = 328
             messages[1]['content'] = TCP_IP + ' : ' + str(TCP_PORT)
+            count += 1
             extension = os.path.splitext(file.filename)[1]
             # realpath = os.path.realpath(file.filename)
             Block = []
@@ -89,7 +92,7 @@ def upload():
                     
                 page = DP.convert_hex_file(Block)
                 MyWorker(page)
-                messages.append({   'title': 'OTA state',
+                messages.append({   'title': 'OTA state no.'+str(count),
                                     'content' : 'The program OTA is running in the background, please wait for a minutes'})
                 return redirect(url_for('index'))
         except:
