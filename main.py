@@ -35,6 +35,7 @@ TCP_PORT = 328
 
 @app.route('/')
 def index():
+    global messages
     return render_template('index.html', messages=messages)
 
 # ...
