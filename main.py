@@ -42,6 +42,29 @@ def index():
 
 # ...
 
+
+class MyWorker():
+
+  def __init__(self, page):
+    with app.app_context():
+        self.page = page
+        thread = threading.Thread(target=self.run, args=())
+        thread.daemon = True
+        thread.start()
+
+  def run(self):
+    with app.app_context():
+        global TCP_IP
+        global TCP_PORT
+        global messages
+        start_time = time.time()
+        log = AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
+        messages.append({'title': 'Debug OTA logs', 'content' : ''})
+        for i in range(0,len(log),2):
+            messages.append({'title': log[i], 'content' : log[i+1]})
+        messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
+        # return redirect(url_for("upload"))
+
 @app.route('/create/', methods=('GET', 'POST'))
 def create():
     if request.method == 'POST':
@@ -100,25 +123,3 @@ def upload():
             return 'Not allowed'
         
     return render_template('upload.html')
-
-class MyWorker():
-
-  def __init__(self, page):
-    with app.app_context():
-        self.page = page
-        thread = threading.Thread(target=self.run, args=())
-        thread.daemon = True
-        thread.start()
-
-  def run(self):
-    with app.app_context():
-        global TCP_IP
-        global TCP_PORT
-        global messages
-        start_time = time.time()
-        log = AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
-        messages.append({'title': 'Debug OTA logs', 'content' : ''})
-        for i in range(0,len(log),2):
-            messages.append({'title': log[i], 'content' : log[i+1]})
-        messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
-        # return redirect(url_for("upload"))
