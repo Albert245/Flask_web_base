@@ -5,7 +5,7 @@ import pyfirebase as base
 import AVRtool as AVR
 import time
 import threading
-from flask_socketio import SocketIO
+
 
 
 
