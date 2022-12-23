@@ -120,6 +120,6 @@ def upload():
                                     'content' : 'The program OTA is running in the background, please wait for a minutes'})
                 return redirect(url_for('index'))
         except:
-            return 'Not allowed'
+            return 'Not allowed.'
         
     return render_template('upload.html')
