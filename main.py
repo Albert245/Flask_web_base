@@ -87,39 +87,39 @@ def upload():
         global TCP_IP
         global TCP_PORT
         global count
-        try:
-            file = request.files['uploadfile']
-            IP = request.form['TCP']
-            Port = int(request.form['Port'])
-            AVR_type = request.form['F_type']
-            if AVR_type == "Custom":
-                if not IP:
-                    IP = TCP_IP
-                elif not Port:
-                    Port = TCP_PORT
-                else:
-                    TCP_IP = IP
-                    TCP_PORT = Port
-            if AVR_type == "Default":
-                TCP_IP =  '113.172.96.69'
-                TCP_PORT = 328
-            messages[1]['content'] = TCP_IP + ' : ' + str(TCP_PORT)
-            count += 1
-            extension = os.path.splitext(file.filename)[1]
-            # realpath = os.path.realpath(file.filename)
-            Block = []
-            if file:
-                if extension not in app.config['ALLOWED_EXTENSIONS']:
-                    return 'Not a hex file'
-                for line in file.readlines():
-                    Block.append(str(line.rstrip()))
-                    
-                page = DP.convert_hex_file(Block)
-                MyWorker(page)
-                messages.append({   'title': 'OTA state no.'+str(count),
-                                    'content' : 'The program OTA is running in the background, please wait for a minutes'})
-                return redirect(url_for('index'))
-        except:
-            return 'Not allowed.'
+        # try:
+        file = request.files['uploadfile']
+        IP = request.form['TCP']
+        Port = int(request.form['Port'])
+        AVR_type = request.form['F_type']
+        if AVR_type == "Custom":
+            if not IP:
+                IP = TCP_IP
+            elif not Port:
+                Port = TCP_PORT
+            else:
+                TCP_IP = IP
+                TCP_PORT = Port
+        if AVR_type == "Default":
+            TCP_IP =  '113.172.96.69'
+            TCP_PORT = 328
+        messages[1]['content'] = TCP_IP + ' : ' + str(TCP_PORT)
+        count += 1
+        extension = os.path.splitext(file.filename)[1]
+        # realpath = os.path.realpath(file.filename)
+        Block = []
+        if file:
+            if extension not in app.config['ALLOWED_EXTENSIONS']:
+                return 'Not a hex file'
+            for line in file.readlines():
+                Block.append(str(line.rstrip()))
+                
+            page = DP.convert_hex_file(Block)
+            MyWorker(page)
+            messages.append({   'title': 'OTA state no.'+str(count),
+                                'content' : 'The program OTA is running in the background, please wait for a minutes'})
+            return redirect(url_for('index'))
+        # except:
+        #     return 'Not allowed.'
         
     return render_template('upload.html')
