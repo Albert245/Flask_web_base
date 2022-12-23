@@ -90,7 +90,7 @@ def upload():
         # try:
         file = request.files['uploadfile']
         IP = request.form['TCP']
-        Port = int(request.form['Port'])
+        Port = int(request.form['Port'].strip())
         AVR_type = request.form['F_type']
         if AVR_type == "Custom":
             if not IP:
