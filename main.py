@@ -89,17 +89,17 @@ def upload():
         global count
         # try:
         file = request.files['uploadfile']
-        IP = request.form['TCP']
-        Port = int(request.form['Port'].strip())
         AVR_type = request.form['F_type']
         if AVR_type == "Custom":
+            IP = request.form['TCP']
+            Port = request.form['Port']
             if not IP:
                 IP = TCP_IP
             elif not Port:
                 Port = TCP_PORT
             else:
                 TCP_IP = IP
-                TCP_PORT = Port
+                TCP_PORT = int(Port)
         if AVR_type == "Default":
             TCP_IP =  '113.172.96.69'
             TCP_PORT = 328
