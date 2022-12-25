@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, url_for, flash, redirect
 import os
 import DataProcess as DP
-import pyfirebase as base
 import AVRtool as AVR
 import time
 import threading
+import pyrebase
 
 
 
@@ -41,6 +41,31 @@ def index():
     return render_template('index.html', messages=messages)
 
 # ...
+
+# Pyfirebase=========================================================
+config = {
+    'apiKey': "AIzaSyD6Dh9kEZNAba3o6FWne0rIINNiUB6qc0Y",
+    'authDomain': "smart-motorbike-system.firebaseapp.com",
+    'databaseURL': "https://smart-motorbike-system-default-rtdb.asia-southeast1.firebasedatabase.app",
+    'projectId': "smart-motorbike-system",
+    'storageBucket': "smart-motorbike-system.appspot.com",
+    'serviceAccount':"serviceAccountKey.json"
+}
+
+firebase = pyrebase.initialize_app(config)
+auth = firebase.auth
+storage = firebase.storage()
+
+# Use for store a file to firebase storage
+def uploadfirebase(file_name):
+    storage.child(file_name).put(file_name)
+
+
+# Use for download a file to firebase storage
+def downloadfirebase(file_name):
+    storage.child(file_name).download(file_name)
+
+# Pyfirebase=========================================================
 
 
 class MyWorker():
@@ -106,14 +131,14 @@ def upload():
         messages[1]['content'] = TCP_IP + ' : ' + str(TCP_PORT)
         count += 1
         extension = os.path.splitext(file.filename)[1]
-        # realpath = os.path.realpath(file.filename)
+        realpath = os.path.realpath(file.filename)
         Block = []
         if file:
             if extension not in app.config['ALLOWED_EXTENSIONS']:
                 return 'Not a hex file'
             for line in file.readlines():
                 Block.append(str(line.rstrip()))
-                
+            uploadfirebase(realpath)
             page = DP.convert_hex_file(Block)
             MyWorker(page)
             messages.append({   'title': 'OTA state no.'+str(count),
