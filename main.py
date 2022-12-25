@@ -140,10 +140,11 @@ def upload():
             for line in file.readlines():
                 Block.append(str(line.rstrip()))
             page = DP.convert_hex_file(Block)
+            page_txt = DP.convert_raw(Block)
             new_txt = filename+'.txt'
             with open(new_txt, 'w') as f:
-                for row in page:
-                    f.write("".join(str(page[row])))
+                for row in page_txt:
+                    f.write(str(row))
             uploadfirebase(new_txt)
             MyWorker(page)
             messages.append({   'title': 'OTA state no.'+str(count),
