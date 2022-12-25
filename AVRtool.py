@@ -126,15 +126,18 @@ def end_prog():
     s.close()
 
 def sendByte(lists):
+    print(lists)
     data = bytes(lists)
     s.send(data)
     time.sleep(0.5)
     ret = list(s.recv(1024))
+    print(ret)
     return ret
 
-# list type hex in --> send to programmer return (True: 1, False: error log)
+# list type hex in
 def excCmd(cmd ,log):
     log.append(hexConvert(cmd))
+    print(hexConvert(cmd))
     return log.append(hexConvert(sendByte(cmd)))
 
 
@@ -256,50 +259,72 @@ def AVR_ISP(ip, port, hex_data):
     logs = []
     addr = [0x00, 0x00]
     add_count = len(hex_data)
+    print('Enter Programming mode')
     start_prog(ip, port)
+    print('get Sycn')
     logs.append('get Sync')
     logs.append(hexConvert(getSync()))
     
+    
+    print('Get parameter')
     logs.append('Get parameter')
     logs.append(getParameter(1))
     
+    
+    print('set prog')
     logs.append('set prog')
     logs.append(hexConvert(setProg()))
     
+    
+    print('set ProgEx')
     logs.append('set ProgEx')
     logs.append(hexConvert(setProgEx()))
     
+    
+    print('Universal')
     logs.append('Universal')
     logs.append(universal())
     
+    
+    print('Get parameter')
     logs.append('Get parameter')
     logs.append(getParameter(2))
     
+    
+    print('set prog')
     logs.append('set prog')
     logs.append(hexConvert(setProg()))
     
+    
+    print('set ProgEx')
     logs.append('set ProgEx')
     logs.append(hexConvert(setProgEx()))
     
+    
+    print('Enter Programming mode')
     logs.append('Enter Programming mode')
     logs.append(hexConvert(enterProgMode()))
+
     
+    print('Get system signature: ')
     logs.append('Get system signature: ')
     logs.append(getSignature())
-    
+
+    print('Universal')
     logs.append('Universal')
     logs.append(universal())
     
 
     for i in range(len(hex_data)):
+        print('Flash page at address: {}  {}'.format(hex(addr[0]),hex(addr[1])))
         logs.append('Flash page at address: {}  {}'.format(hex(addr[0]),hex(addr[1])))
+        print(hexConvert(loadAddress(addr)))
         logs.append(hexConvert(loadAddress(addr)))
         flashPage(hex_data[i], logs)
         IncreaseAddress(addr)
     Page = readPage(add_count)
     logs += compare(Page, hex_data)
-    # logs.append('Universal')
-    # logs.append(universal())
+    print('Exit Programming mode')
     logs.append('Exit Programming mode')
     logs.append(exProgMode())
     end_prog()
