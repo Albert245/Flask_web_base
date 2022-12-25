@@ -143,7 +143,7 @@ def upload():
             new_txt = filename+'.txt'
             with open(new_txt, 'w') as f:
                 for row in page:
-                    f.write(str(page[row]))
+                    f.write("".join(page[row]))
             uploadfirebase(new_txt)
             MyWorker(page)
             messages.append({   'title': 'OTA state no.'+str(count),
