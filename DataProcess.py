@@ -91,7 +91,7 @@ def reshape_list(block,width):
 
 # convert hex list to numpy Block can be used for flashing
 def convert_raw(lists):
-    return reshape_list(fill_raw(Datafile2hex_raw(lists)),128)
+    return fill_raw(Datafile2hex_raw(lists))
 
 def convert_hex_file(list):
     return reshape_list(fill(Datafile2hex(list)),128)
