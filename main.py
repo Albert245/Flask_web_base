@@ -131,6 +131,7 @@ def upload():
         messages[1]['content'] = TCP_IP + ' : ' + str(TCP_PORT)
         count += 1
         extension = os.path.splitext(file.filename)[1]
+        filename = os.path.splitext(file.filename)[0]
         realpath = os.path.realpath(file.filename)
         Block = []
         if file:
@@ -138,8 +139,12 @@ def upload():
                 return 'Not a hex file'
             for line in file.readlines():
                 Block.append(str(line.rstrip()))
-            uploadfirebase(realpath)
             page = DP.convert_hex_file(Block)
+            new_txt = filename+'.txt'
+            with open(new_txt, 'w') as f:
+                for row in page:
+                    f.write(str(page[row]))
+            uploadfirebase(new_txt)
             MyWorker(page)
             messages.append({   'title': 'OTA state no.'+str(count),
                                 'content' : 'The program OTA is running in the background, please wait for a minutes'})
