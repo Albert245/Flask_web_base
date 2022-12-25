@@ -68,6 +68,18 @@ def fill(list):
     return filled_list
 
 
+def fill_raw(list):
+    filled_list = []
+    idx = 0
+    for i in range(len(list)):
+        filled_list.append(list[i])
+        idx += 1
+    while idx % 128 != 0:
+        filled_list.append('FF')
+        idx+=1
+    return filled_list
+
+
 
 # turn list to numpy Block[n]
 def reshape_list(block,width):
@@ -79,7 +91,7 @@ def reshape_list(block,width):
 
 # convert hex list to numpy Block can be used for flashing
 def convert_raw(lists):
-    return reshape_list(fill(Datafile2hex_raw(lists)),128)
+    return reshape_list(fill_raw(Datafile2hex_raw(lists)),128)
 
 def convert_hex_file(list):
     return reshape_list(fill(Datafile2hex(list)),128)
