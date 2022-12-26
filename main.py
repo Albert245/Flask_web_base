@@ -158,13 +158,14 @@ def upload():
             page_txt = DP.convert_raw(Block)
             if 'current_hex' in session:
                 session['last_hex'] = session['current_hex']
-            session['current_hex'] = page_txt
             new_txt = filename+'.txt'
             with open(new_txt, 'w') as f:
                 for row in page_txt:
                     f.write(str(row))
                     print(str(row))
             uploadfirebase(new_txt)
+            hex_str = open(new_txt,'r')
+            session['current_hex'] = hex_str.read()
             MyWorker(page)
             messages.append({   'title': 'OTA state no.'+str(count),
                                 'content' : 'The program OTA is running in the background, please wait for a minutes'})
