@@ -84,17 +84,16 @@ class MyWorker():
         for i in range(0,len(log),2):
             messages.append({'title': log[i], 'content' : log[i+1]})
         messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
-        session['messages'] = messages
+        # session['messages'] = messages
         # return redirect(url_for("upload"))
 
 #===========================================[ APP ]===========================================================
 @app.route('/')
 def index():
     global messages
-    if 'messages' in session:
-        messages = session['messages']
+    session['messages'] = messages
     time.sleep(1)
-    return render_template('index.html', messages=messages)
+    return render_template('index.html', messages=session['messages'])
 
 @app.route('/hex', methods=('GET', 'POST'))
 def create():
