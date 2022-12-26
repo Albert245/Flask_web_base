@@ -78,8 +78,6 @@ class MyWorker():
         global TCP_IP
         global TCP_PORT
         global messages
-        if 'messages' in session:
-            messages = session['messages']
         start_time = time.time()
         log = AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
         messages.append({'title': 'Debug OTA logs', 'content' : ''})
