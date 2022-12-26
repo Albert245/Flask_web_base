@@ -91,7 +91,11 @@ class MyWorker():
 @app.route('/')
 def index():
     global messages
-    session['messages'] = messages
+    if 'messages' in session:
+        if len(session['messages']) > len(messages):
+            messages = session['messages']
+        else:
+            session['messages'] = messages
     time.sleep(1)
     return render_template('index.html', messages=session['messages'])
 
