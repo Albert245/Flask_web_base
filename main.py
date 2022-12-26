@@ -33,7 +33,7 @@ TCP_PORT = 328
 
 # ...
 
-session.permanent = True
+
 
 # ...
 
@@ -90,6 +90,7 @@ class MyWorker():
 @app.route('/')
 def index():
     global messages
+    session.permanent = True
     if 'messages' in session:
         if len(session['messages']) > len(messages):
             messages = session['messages']
@@ -112,11 +113,13 @@ def hex():
         
 @app.route('/refresh', methods=('GET', 'POST'))
 def refresh():
-    session.pop('messages', None)
+    if 'messages' in session:
+        session.pop('messages', None)
     return redirect(url_for('index'))
 
 @app.route('/upload', methods = ('GET','POST'))
 def upload():
+    session.permanent = True
     if request.method == 'POST':
         global TCP_IP
         global TCP_PORT
