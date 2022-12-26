@@ -123,6 +123,9 @@ def upload():
         global TCP_IP
         global TCP_PORT
         global count
+        if 'messages' in session:
+            messages = session['messages']
+        session['messages'] = messages
         if 'count' in session:
             count = session['count']
         session['count'] = count
@@ -142,7 +145,7 @@ def upload():
         if AVR_type == "Default":
             TCP_IP =  '113.172.96.69'
             TCP_PORT = 328
-        messages[1]['content'] = TCP_IP + ' : ' + str(TCP_PORT)
+        messages.append({'title': 'Current TCP/IP : Port', 'content' : TCP_IP + ' : ' + str(TCP_PORT)})
         count += 1
         session['count'] = count
         extension = os.path.splitext(file.filename)[1]
