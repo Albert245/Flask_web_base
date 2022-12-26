@@ -13,7 +13,7 @@ import pyrebase
 # ...
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 1024*32
-app.config['SECRET_KEY'] = '1709'
+app.secret_key = '1709'
 app.config['ALLOWED_EXTENSIONS'] = {'.hex'}
 # app.config['SERVER_NAME'] = 'https://esp8266-avrisp.herokuapp.com'
 
