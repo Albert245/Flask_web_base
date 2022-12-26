@@ -5,7 +5,7 @@ import AVRtool as AVR
 import time
 import threading
 import pyrebase
-
+from datetime import timedelta
 
 
 
@@ -16,7 +16,7 @@ app.config['MAX_CONTENT_LENGTH'] = 1024*32
 app.secret_key = '1709'
 app.config['ALLOWED_EXTENSIONS'] = {'.hex'}
 # app.config['SERVER_NAME'] = 'https://esp8266-avrisp.herokuapp.com'
-
+app.permanent_session_lifetime = timedelta(days = 7)
 
 messages = [{'title': 'Debug Terminal',
              'content': 'Below are debug output'},
@@ -100,7 +100,7 @@ def index():
     return render_template('index.html', messages=session['messages'])
 
 @app.route('/hex', methods=('GET', 'POST'))
-def create():
+def hex():
     if 'current_hex' in session:
         if 'last_hex' in session:
             if session['current_hex'] != session['last_hex']:
@@ -111,7 +111,10 @@ def create():
     else:
         return 'None'
         
-
+@app.route('/refresh', methods=('GET', 'POST'))
+def refresh():
+    session.pop('messages', None)
+    return redirect(url_for('index'))
 
 @app.route('/upload', methods = ('GET','POST'))
 def upload():
