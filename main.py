@@ -25,7 +25,6 @@ messages = [{'title': 'Debug Terminal',
             ]
 
 count = 0
-debug_log = ''
 
 # ...
 
@@ -34,7 +33,7 @@ TCP_PORT = 328
 
 # ...
 
-
+session.permanent = True
 
 # ...
 
@@ -122,6 +121,9 @@ def upload():
         global TCP_IP
         global TCP_PORT
         global count
+        if 'count' in session:
+            count = session['count']
+        session['count'] = count
         # try:
         file = request.files['uploadfile']
         AVR_type = request.form['F_type']
@@ -140,6 +142,7 @@ def upload():
             TCP_PORT = 328
         messages[1]['content'] = TCP_IP + ' : ' + str(TCP_PORT)
         count += 1
+        session['count'] = count
         extension = os.path.splitext(file.filename)[1]
         filename = os.path.splitext(file.filename)[0]
         # realpath = os.path.realpath(file.filename)
