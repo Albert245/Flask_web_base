@@ -78,10 +78,6 @@ class MyWorker():
         global TCP_IP
         global TCP_PORT
         global messages
-        if 'TCP_IP' in session:
-            TCP_IP = session['TCP_IP']
-        if 'TCP_PORT' in session:
-            TCP_PORT = session['TCP_PORT']
         if 'messages' in session:
             messages = session['messages']
         start_time = time.time()
@@ -138,8 +134,6 @@ def upload():
         if AVR_type == "Default":
             TCP_IP =  '113.172.96.69'
             TCP_PORT = 328
-        session['TCP_IP'] = TCP_IP
-        session['TCP_PORT'] = TCP_PORT
         messages[1]['content'] = TCP_IP + ' : ' + str(TCP_PORT)
         count += 1
         extension = os.path.splitext(file.filename)[1]
