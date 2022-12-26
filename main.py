@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, flash, redirect
+from flask import Flask, render_template, request, url_for, flash, redirect, session
 import os
 import DataProcess as DP
 import AVRtool as AVR
@@ -34,11 +34,7 @@ TCP_PORT = 328
 
 # ...
 
-@app.route('/')
-def index():
-    global messages
-    time.sleep(1)
-    return render_template('index.html', messages=messages)
+
 
 # ...
 
@@ -65,7 +61,7 @@ def uploadfirebase(file_name):
 def downloadfirebase(file_name):
     storage.child(file_name).download(file_name)
 
-# Pyfirebase=========================================================
+# End - Pyfirebase=========================================================
 
 
 class MyWorker():
@@ -82,29 +78,43 @@ class MyWorker():
         global TCP_IP
         global TCP_PORT
         global messages
+        if 'TCP_IP' in session:
+            TCP_IP = session['TCP_IP']
+        if 'TCP_PORT' in session:
+            TCP_PORT = session['TCP_PORT']
+        if 'messages' in session:
+            messages = session['messages']
         start_time = time.time()
         log = AVR.AVR_ISP(TCP_IP,TCP_PORT,self.page)
         messages.append({'title': 'Debug OTA logs', 'content' : ''})
         for i in range(0,len(log),2):
             messages.append({'title': log[i], 'content' : log[i+1]})
         messages.append({'title': 'Execution time:', 'content' : time.time() - start_time})
+        session['messages'] = messages
         # return redirect(url_for("upload"))
 
-@app.route('/create/', methods=('GET', 'POST'))
+#===========================================[ APP ]===========================================================
+@app.route('/')
+def index():
+    global messages
+    if 'messages' in session:
+        messages = session['messages']
+    time.sleep(1)
+    return render_template('index.html', messages=messages)
+
+@app.route('/hex', methods=('GET', 'POST'))
 def create():
-    if request.method == 'POST':
-        title = request.form['title']
-        content = request.form['content']
+    if 'current_hex' in session:
+        if 'last_hex' in session:
+            if session['current_hex'] != session['last_hex']:
+                return session['current_hex']
+            else:
+                return 'None'
+        return session['current_hex']
+    else:
+        return 'None'
+        
 
-        if not title:
-            flash('Title is required!')
-        elif not content:
-            flash('Content is required!')
-        else:
-            messages.append({'title': title, 'content': content})
-            return redirect(url_for('index'))
-
-    return render_template('create.html')
 
 @app.route('/upload', methods = ('GET','POST'))
 def upload():
@@ -128,11 +138,13 @@ def upload():
         if AVR_type == "Default":
             TCP_IP =  '113.172.96.69'
             TCP_PORT = 328
+        session['TCP_IP'] = TCP_IP
+        session['TCP_PORT'] = TCP_PORT
         messages[1]['content'] = TCP_IP + ' : ' + str(TCP_PORT)
         count += 1
         extension = os.path.splitext(file.filename)[1]
         filename = os.path.splitext(file.filename)[0]
-        realpath = os.path.realpath(file.filename)
+        # realpath = os.path.realpath(file.filename)
         Block = []
         if file:
             if extension not in app.config['ALLOWED_EXTENSIONS']:
@@ -141,6 +153,9 @@ def upload():
                 Block.append(str(line.rstrip()))
             page = DP.convert_hex_file(Block)
             page_txt = DP.convert_raw(Block)
+            if 'current_hex' in session:
+                session['last_hex'] = session['current_hex']
+            session['current_hex'] = page_txt
             new_txt = filename+'.txt'
             with open(new_txt, 'w') as f:
                 for row in page_txt:
@@ -150,6 +165,7 @@ def upload():
             MyWorker(page)
             messages.append({   'title': 'OTA state no.'+str(count),
                                 'content' : 'The program OTA is running in the background, please wait for a minutes'})
+            session['messages'] = messages
             return redirect(url_for('index'))
         # except:
         #     return 'Not allowed'
